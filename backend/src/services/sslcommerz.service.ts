@@ -1,0 +1,42 @@
+import SSLCommerzPayment from 'sslcommerz-lts';
+
+const store_id = process.env.SSLCOMMERZ_STORE_ID || '';
+const store_passwd = process.env.SSLCOMMERZ_STORE_PASS || '';
+const is_live = process.env.SSLCOMMERZ_IS_LIVE === 'true';
+
+export const initSSLCommerz = async (data: {
+  total_amount: number;
+  tran_id: string;
+  cus_name: string;
+  cus_email: string;
+  cus_phone: string;
+  cus_add1: string;
+  cus_city: string;
+  product_name: string;
+  product_category: string;
+}): Promise<any> => {
+  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+
+  const paymentData = {
+    ...data,
+    currency: 'BDT',
+    shipping_method: 'Courier',
+    product_profile: 'physical-goods',
+    success_url: `${process.env.FRONTEND_URL}/api/payment/sslcommerz/success`,
+    fail_url: `${process.env.FRONTEND_URL}/api/payment/sslcommerz/fail`,
+    cancel_url: `${process.env.FRONTEND_URL}/api/payment/sslcommerz/fail`,
+    ipn_url: `${process.env.FRONTEND_URL}/api/payment/sslcommerz/ipn`,
+    cus_country: 'Bangladesh',
+    ship_name: data.cus_name,
+    ship_add1: data.cus_add1,
+    ship_city: data.cus_city,
+    ship_country: 'Bangladesh',
+  };
+
+  return sslcz.init(paymentData);
+};
+
+export const validateTransaction = async (val_id: string): Promise<any> => {
+  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+  return sslcz.validate({ val_id });
+};
