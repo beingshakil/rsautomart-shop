@@ -23,7 +23,7 @@ export default function BestSellers() {
   });
 
   return (
-    <section className="py-10">
+    <section className="py-14 md:py-16">
       <div className="max-w-360 mx-auto px-4">
         <SectionHeader title="Best Sellers" viewAllHref="/shop?sort=popular" />
 

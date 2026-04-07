@@ -36,7 +36,7 @@ export default function ShopPage() {
                 <span className="uppercase text-xs font-bold tracking-wider">Filter</span>
               </SheetTrigger>
               <SheetContent side="left" className="w-80">
-                <div className="pt-6">
+                <div className="px-5 py-6 overflow-y-auto h-full">
                   <ProductFilter filters={filters} onFilterChange={(f) => { setFilters(f); setPage(1); }} />
                 </div>
               </SheetContent>

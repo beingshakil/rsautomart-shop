@@ -17,6 +17,10 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
     if (directItems && directItems.length > 0) {
       orderItems = directItems;
     } else {
+      if (!req.user) {
+        res.status(400).json({ message: 'No items provided.' });
+        return;
+      }
       const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
       if (!cart || cart.items.length === 0) {
         res.status(400).json({ message: 'Cart is empty.' });
@@ -36,14 +40,13 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
 
     // Calculate shipping
     const district = shippingAddress.district?.toLowerCase();
-    let shippingCost = DHAKA_DISTRICTS.includes(district) ? 60 : 120;
-    if (subtotal >= FREE_SHIPPING_MIN) shippingCost = 0;
+    let shippingCost = DHAKA_DISTRICTS.includes(district) ? 70 : 120;
 
     const discount = req.body.discount || 0;
     const totalAmount = subtotal + shippingCost - discount;
 
     const order = await Order.create({
-      user: req.user._id,
+      user: req.user?._id,
       items: orderItems,
       shippingAddress,
       paymentMethod: paymentMethod || 'COD',
@@ -64,12 +67,18 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
     }
 
     // Clear cart
-    await Cart.findOneAndUpdate({ user: req.user._id }, { items: [], totalAmount: 0 });
+    if (req.user) {
+      await Cart.findOneAndUpdate({ user: req.user._id }, { items: [], totalAmount: 0 });
+    }
 
     // Send emails (fire and forget)
     try {
-      await sendOrderConfirmation(req.user.email, order.orderNumber, totalAmount, orderItems);
-      await sendNewOrderNotification(order.orderNumber, totalAmount, req.user.name);
+      const customerEmail = req.user?.email;
+      const customerName = req.user?.name || shippingAddress?.name || 'Guest';
+      if (customerEmail) {
+        await sendOrderConfirmation(customerEmail, order.orderNumber, totalAmount, orderItems);
+      }
+      await sendNewOrderNotification(order.orderNumber, totalAmount, customerName);
     } catch {}
 
     res.status(201).json({ order });
