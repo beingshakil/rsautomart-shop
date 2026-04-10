@@ -13,20 +13,26 @@ import api from '@/lib/api';
 
 export default function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = use(params);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
   const [categoryData, setCategoryData] = useState<any>(null);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState('popular');
 
   useEffect(() => {
     api.get(`/categories/${category}`)
-      .then(({ data }) => setCategoryData(data.category))
-      .catch(() => {});
+      .then(({ data }) => {
+        setCategoryData(data.category);
+        setCategoryId(data.category?._id || 'not-found');
+      })
+      .catch(() => setCategoryId('not-found'));
   }, [category]);
 
-  const filters: Record<string, string> = { sort, page: String(page) };
-  if (categoryData) filters.category = categoryData._id;
+  const filters: Record<string, string> = { sort, page: String(page), limit: '12' };
+  if (categoryId && categoryId !== 'not-found') filters.category = categoryId;
+  else if (categoryId === 'not-found') filters.category = 'invalid-id-to-force-empty';
 
-  const { products, pagination, loading } = useProducts(filters);
+  const finalFilters = categoryId === null ? { _skip: 'true' } : filters;
+  const { products, pagination, loading } = useProducts(finalFilters);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -34,19 +40,19 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
         <SectionHeader title={categoryData?.name || 'Category'} />
 
         {categoryData?.description && (
-          <p className="text-gray-500 mb-6 -mt-4">{categoryData.description}</p>
+          <p className="text-gray-500 mb-6 -mt-4 text-sm font-medium border-l-2 border-brand-red pl-4">{categoryData.description}</p>
         )}
 
         {/* Toolbar */}
         <div className="flex items-center justify-between mb-6 gap-4">
           <div className="flex items-center gap-3">
             <Sheet>
-              <SheetTrigger render={<Button variant="outline" size="sm" className="gap-2 border-gray-300 text-brand-black hover:border-brand-red hover:text-brand-red" />}>
+              <SheetTrigger render={<Button variant="outline" size="sm" className="gap-2 border-gray-300 text-brand-black hover:border-brand-red hover:text-brand-red transition-all" />}>
                 <SlidersHorizontal size={16} />
                 <span className="uppercase text-xs font-bold tracking-wider">Filter</span>
               </SheetTrigger>
-              <SheetContent side="left" className="w-80">
-                <div className="px-5 py-6 overflow-y-auto h-full">
+              <SheetContent side="left" className="w-[85vw] sm:w-[400px] flex flex-col p-0">
+                <div className="flex-1 overflow-y-auto scrollbar-hide p-6">
                   <ProductFilter
                     filters={{ ...filters, sort }}
                     onFilterChange={(f) => { setSort(f.sort || 'popular'); setPage(1); }}
@@ -55,8 +61,8 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
               </SheetContent>
             </Sheet>
 
-            <span className="hidden sm:inline text-sm text-gray-500">
-              {pagination.total} products
+            <span className="hidden sm:inline text-sm text-gray-400 font-bold uppercase tracking-tighter">
+              {pagination.total} components found
             </span>
           </div>
 
@@ -65,35 +71,43 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
 
         <ProductGrid products={products} loading={loading} />
 
-        {/* Pagination */}
+        {/* Pagination Overlay (Windowed) */}
         {pagination.pages > 1 && (
-          <nav className="flex items-center justify-center gap-1.5 mt-10">
+          <nav className="flex items-center justify-center gap-1.5 mt-12 pb-10">
             <button
-              onClick={() => setPage(Math.max(1, page - 1))}
+              onClick={() => { setPage(Math.max(1, page - 1)); window.scrollTo(0,0); }}
               disabled={page === 1}
-              className="w-9 h-9 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-brand-red hover:text-brand-red transition-colors disabled:opacity-30"
+              className="w-10 h-10 flex items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:border-brand-red hover:text-brand-red transition-all disabled:opacity-30 bg-white shadow-sm"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
-            {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                className={`w-9 h-9 flex items-center justify-center rounded text-sm font-medium transition-colors ${
-                  p === page
-                    ? 'bg-brand-red text-white font-bold'
-                    : 'border border-gray-200 text-gray-600 hover:border-brand-red hover:text-brand-red'
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            
+            {Array.from({ length: pagination.pages }, (_, i) => i + 1)
+              .filter((p) => p === 1 || p === pagination.pages || Math.abs(p - page) <= 1)
+              .map((p, idx, arr) => (
+                <span key={p} className="flex items-center gap-1.5">
+                  {idx > 0 && arr[idx - 1] !== p - 1 && (
+                    <span className="w-10 h-10 inline-flex items-center justify-center text-gray-400 text-sm font-bold tracking-widest">...</span>
+                  )}
+                  <button
+                    onClick={() => { setPage(p); window.scrollTo(0,0); }}
+                    className={`w-10 h-10 inline-flex items-center justify-center rounded-xl text-sm font-bold transition-all shadow-sm ${
+                      p === page
+                        ? 'bg-brand-red text-white scale-110'
+                        : 'bg-white border border-gray-100 text-gray-600 hover:border-brand-red hover:text-brand-red'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                </span>
+              ))}
+
             <button
-              onClick={() => setPage(Math.min(pagination.pages, page + 1))}
+              onClick={() => { setPage(Math.min(pagination.pages, page + 1)); window.scrollTo(0,0); }}
               disabled={page === pagination.pages}
-              className="w-9 h-9 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:border-brand-red hover:text-brand-red transition-colors disabled:opacity-30"
+              className="w-10 h-10 flex items-center justify-center rounded-xl border border-gray-200 text-gray-500 hover:border-brand-red hover:text-brand-red transition-all disabled:opacity-30 bg-white shadow-sm"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           </nav>
         )}
