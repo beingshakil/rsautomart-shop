@@ -29,7 +29,12 @@ connectDB();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://rsautomart.shop'],
+  origin: [
+    'http://localhost:3000',
+    'https://rsautomart.shop',
+    'https://www.rsautomart.shop',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
