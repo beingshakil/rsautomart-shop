@@ -99,13 +99,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image Gallery */}
         <div>
-          <div className="aspect-square relative rounded-xl overflow-hidden bg-gray-100 mb-4">
+          <div className="aspect-square relative rounded-xl overflow-hidden bg-gray-50 mb-4 border border-gray-200">
             {product.images?.[selectedImage]?.url ? (
               <Image
                 src={product.images[selectedImage].url}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-contain p-4"
                 priority
               />
             ) : (
@@ -185,57 +185,56 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
-          {/* Quantity */}
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-sm font-medium">Quantity:</span>
-            <div className="flex items-center border rounded-lg">
+          {/* Quantity & Actions */}
+          <Separator className="my-4" />
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-sm font-medium text-gray-600">Quantity:</span>
+            <div className="flex items-center border border-gray-200 rounded-lg">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-3 py-2 hover:bg-gray-100"
+                className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
               >
-                <Minus size={16} />
+                <Minus size={14} />
               </button>
-              <span className="px-4 py-2 border-x font-medium">{quantity}</span>
+              <span className="px-4 py-1.5 border-x border-gray-200 font-medium text-sm min-w-[2.5rem] text-center">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="px-3 py-2 hover:bg-gray-100"
+                className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
               >
-                <Plus size={16} />
+                <Plus size={14} />
               </button>
             </div>
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex flex-wrap gap-2 mb-6">
             <Button
-              className="flex-1 bg-brand-red hover:bg-brand-red-dark"
-              size="lg"
+              className="bg-brand-red hover:bg-brand-red-dark text-sm px-6"
               onClick={() => addToCart(product, quantity, selectedVariant || undefined)}
               disabled={product.stock?.status === 'out_of_stock'}
             >
-              <ShoppingCart size={18} className="mr-2" /> Add to Cart
+              <ShoppingCart size={16} className="mr-2" /> Add to Cart
             </Button>
             <Button
               variant="outline"
-              size="lg"
+              className="text-sm px-6"
               onClick={() => {
                 addToCart(product, quantity, selectedVariant || undefined);
                 window.location.href = '/checkout';
               }}
               disabled={product.stock?.status === 'out_of_stock'}
             >
-              <Zap size={18} className="mr-2" /> Buy Now
+              <Zap size={16} className="mr-2" /> Buy Now
             </Button>
             <Button
               variant="outline"
-              size="icon-lg"
+              size="icon"
               className="shrink-0"
               onClick={() => isWished ? removeItem(product._id) : addItem({
                 _id: product._id, name: product.name, slug: product.slug,
                 price: product.price, discountPrice: product.discountPrice, images: product.images,
               })}
             >
-              <Heart size={18} className={isWished ? 'fill-red-500 text-red-500' : ''} />
+              <Heart size={16} className={isWished ? 'fill-red-500 text-red-500' : ''} />
             </Button>
           </div>
 

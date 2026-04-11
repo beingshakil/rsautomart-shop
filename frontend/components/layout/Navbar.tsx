@@ -73,7 +73,7 @@ export default function Navbar() {
       {/* Main Navbar & Category Bar Wrapper */}
       <header className="sticky top-0 z-50 flex flex-col shadow-sm">
         <div className="bg-white border-b border-gray-200 w-full relative z-50">
-          <div className="max-w-360 mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap lg:flex-nowrap">
+          <div className="max-w-360 mx-auto px-3 md:px-4 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 flex-wrap lg:flex-nowrap">
           {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2 order-first"
@@ -177,7 +177,9 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-[60] bg-white flex flex-col animate-in slide-in-from-left duration-300">
+          <>
+          <div className="lg:hidden fixed inset-0 z-[59] bg-black/40" onClick={() => setMobileMenuOpen(false)} />
+          <div className="lg:hidden fixed inset-y-0 left-0 z-[60] w-[80%] max-w-sm bg-white flex flex-col animate-in slide-in-from-left duration-300 shadow-2xl">
             <div className="flex items-center justify-between px-4 py-4 border-b bg-white/80 backdrop-blur-md sticky top-0 z-10">
               <Image src="/logo-small.png" alt="RS Automart" width={140} height={40} className="h-8 w-auto" />
               <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -296,21 +298,22 @@ export default function Navbar() {
             <div className="p-6 border-t border-gray-100 bg-gray-50">
                <p className="text-[10px] uppercase font-black text-gray-400 mb-4 tracking-tighter">Support & Contact</p>
                <div className="flex flex-col gap-3">
-                  <a href="tel:+8801700000000" className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                  <a href="tel:+8801919242866" className="text-sm font-bold text-gray-700 flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-brand-red/10 flex items-center justify-center text-brand-red">
                        <i className="text-xs">📞</i>
                     </div>
-                    +880 1700-000000
+                    +880 1919-242866
                   </a>
-                  <a href="mailto:support@rsautomart.com" className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                  <a href="mailto:rsautomartshop@gmail.com" className="text-sm font-bold text-gray-700 flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-brand-red/10 flex items-center justify-center text-brand-red">
                        <i className="text-xs">✉️</i>
                     </div>
-                    support@rsautomart.com
+                    rsautomartshop@gmail.com
                   </a>
                </div>
             </div>
           </div>
+          </>
         )}
       </header>
 

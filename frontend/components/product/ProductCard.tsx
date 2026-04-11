@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col">
+    <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
       {/* Image */}
       <div className="relative bg-gray-50 overflow-hidden aspect-square">
         <Link href={`/product/${product.slug}`} className="block w-full h-full">
@@ -83,7 +83,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Details */}
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-2.5 sm:p-4 flex flex-col flex-1">
         {product.category?.name && (
           <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{product.category.name}</p>
         )}
@@ -102,25 +102,25 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Bottom: Qty + Add to Cart */}
-        <div className="flex items-stretch gap-2 border-t border-gray-100 pt-3">
+        <div className="flex items-stretch gap-1.5 sm:gap-2 border-t border-gray-100 pt-2.5 sm:pt-3">
           {/* Quantity Selector */}
           <div className="flex items-center border border-gray-200 rounded-md overflow-hidden shrink-0">
             <button
               type="button"
               aria-label="Decrease quantity"
               onClick={() => setQty(Math.max(1, qty - 1))}
-              className="w-11 h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
+              className="w-8 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
             >
-              <Minus size={16} />
+              <Minus size={14} />
             </button>
-            <span className="w-8 text-center text-sm font-semibold select-none">{qty}</span>
+            <span className="w-6 sm:w-8 text-center text-xs sm:text-sm font-semibold select-none">{qty}</span>
             <button
               type="button"
               aria-label="Increase quantity"
               onClick={() => setQty(qty + 1)}
-              className="w-11 h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
+              className="w-8 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
             >
-              <Plus size={16} />
+              <Plus size={14} />
             </button>
           </div>
           {/* Add to Cart Button */}
@@ -132,10 +132,11 @@ export default function ProductCard({ product }: ProductCardProps) {
               }
             }}
             disabled={product.stock?.status === 'out_of_stock'}
-            className="flex-1 min-h-11 bg-brand-black hover:bg-brand-red text-white text-xs font-bold uppercase tracking-wider rounded-md transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 min-h-9 sm:min-h-11 bg-brand-black hover:bg-brand-red text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-md transition-colors flex items-center justify-center gap-1 sm:gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ShoppingCart size={12} />
-            {product.stock?.status === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}
+            <span className="hidden sm:inline">{product.stock?.status === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
+            <span className="sm:hidden">{product.stock?.status === 'out_of_stock' ? 'Sold Out' : 'Add'}</span>
           </button>
         </div>
       </div>

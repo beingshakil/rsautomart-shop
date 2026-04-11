@@ -39,7 +39,7 @@ export default function FlashSale() {
 
   return (
     <section className="bg-linear-to-r from-brand-red to-red-700 py-14 md:py-16">
-      <div className="container mx-auto px-4">
+      <div className="max-w-360 mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
           <div className="flex items-center gap-3 text-white">
             <Zap size={28} className="fill-yellow-300 text-yellow-300" />
@@ -60,7 +60,7 @@ export default function FlashSale() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
           {loading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-lg p-2">

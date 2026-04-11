@@ -167,12 +167,12 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">District <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City <span className="text-red-500">*</span></label>
                   <input type="text" placeholder="e.g., Dhaka" value={form.district} onChange={(e) => setForm({ ...form, district: e.target.value })} required className={inputCls} />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Division</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
                   <select
                     value={form.division}
                     onChange={(e) => setForm({ ...form, division: e.target.value })}

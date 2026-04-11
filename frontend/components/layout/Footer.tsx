@@ -9,12 +9,12 @@ export default function Footer() {
       <div className="max-w-360 mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Column 1: Brand */}
         <div>
-          <Image 
-            src="/logo-footer.png" 
-            alt="RS Automart" 
-            width={160} 
-            height={50} 
-            className="h-14 w-auto" 
+          <Image
+            src="/logo-footer.png"
+            alt="RS Automart"
+            width={160}
+            height={50}
+            className="h-14 w-auto -ml-1"
           />
           <p className="text-sm leading-relaxed text-gray-400">
             Your one-stop destination for premium quality auto parts and accessories. We deliver reliability, performance, and value — straight to your doorstep.

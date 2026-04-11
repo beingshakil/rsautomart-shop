@@ -30,7 +30,7 @@ export default function CategoryBar() {
 
   return (
     <div className="bg-brand-black z-40 border-b border-white/5 w-full relative">
-      <div className="max-w-360 mx-auto relative lg:px-4">
+      <div className="max-w-360 mx-auto relative px-4">
         {/* Scroll hint arrow — only on mobile, disappears after first scroll */}
         {!hasScrolled && !isAtEnd && (
           <div className="absolute right-0 top-0 bottom-0 z-20 flex items-center pointer-events-none lg:hidden">
