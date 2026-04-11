@@ -81,39 +81,39 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   if (loading) return <div className="space-y-4">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}</div>;
 
   return (
-    <div>
+    <div className="p-6 md:p-8">
       <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
       <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
         <Card>
           <CardHeader><CardTitle>Basic Info</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <Label>Product Name *</Label>
+          <CardContent className="space-y-5">
+            <div className="grid sm:grid-cols-2 gap-5">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Product Name <span className="text-red-500">*</span></Label>
                 <Input value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
-              <div>
-                <Label>SKU</Label>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">SKU</Label>
                 <Input value={form.sku || ''} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
               </div>
-              <div>
-                <Label>Category *</Label>
-                <select className="w-full h-10 px-3 border rounded-md text-sm" value={form.category || ''} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Category <span className="text-red-500">*</span></Label>
+                <select className="w-full h-10 px-3 border border-gray-200 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-colors" value={form.category || ''} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                   <option value="">Select</option>
                   {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
                 </select>
               </div>
-              <div>
-                <Label>Brand</Label>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Brand</Label>
                 <Input value={form.brand || ''} onChange={(e) => setForm({ ...form, brand: e.target.value })} />
               </div>
             </div>
-            <div>
-              <Label>Short Description</Label>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Short Description</Label>
               <Input value={form.shortDescription || ''} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} />
             </div>
-            <div>
-              <Label>Full Description</Label>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Full Description</Label>
               <Textarea rows={5} value={form.description || ''} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
           </CardContent>
@@ -122,12 +122,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         <Card>
           <CardHeader><CardTitle>Pricing & Stock</CardTitle></CardHeader>
           <CardContent>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div><Label>Price (৳)</Label><Input type="number" value={form.price || ''} onChange={(e) => setForm({ ...form, price: e.target.value })} /></div>
-              <div><Label>Discount Price</Label><Input type="number" value={form.discountPrice || ''} onChange={(e) => setForm({ ...form, discountPrice: e.target.value })} /></div>
-              <div><Label>Stock Quantity</Label><Input type="number" value={form.stockQuantity || ''} onChange={(e) => setForm({ ...form, stockQuantity: e.target.value })} /></div>
+            <div className="grid sm:grid-cols-3 gap-5">
+              <div className="space-y-1.5"><Label className="text-sm font-semibold text-gray-700">Price (৳) <span className="text-red-500">*</span></Label><Input type="number" value={form.price || ''} onChange={(e) => setForm({ ...form, price: e.target.value })} /></div>
+              <div className="space-y-1.5"><Label className="text-sm font-semibold text-gray-700">Discount Price (৳)</Label><Input type="number" value={form.discountPrice || ''} onChange={(e) => setForm({ ...form, discountPrice: e.target.value })} /></div>
+              <div className="space-y-1.5"><Label className="text-sm font-semibold text-gray-700">Stock Quantity</Label><Input type="number" value={form.stockQuantity || ''} onChange={(e) => setForm({ ...form, stockQuantity: e.target.value })} /></div>
             </div>
-            <div className="mt-4"><Label>Warranty</Label><Input value={form.warranty || ''} onChange={(e) => setForm({ ...form, warranty: e.target.value })} /></div>
+            <div className="mt-5 space-y-1.5"><Label className="text-sm font-semibold text-gray-700">Warranty</Label><Input value={form.warranty || ''} onChange={(e) => setForm({ ...form, warranty: e.target.value })} /></div>
           </CardContent>
         </Card>
 
@@ -202,7 +202,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         <Card>
           <CardHeader><CardTitle>Settings</CardTitle></CardHeader>
           <CardContent>
-            <div><Label>Tags</Label><Input value={form.tags || ''} onChange={(e) => setForm({ ...form, tags: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label className="text-sm font-semibold text-gray-700">Tags (comma separated)</Label><Input value={form.tags || ''} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="e.g., dash cam, 4k, electronics" /></div>
             <div className="flex flex-wrap gap-6 mt-4">
               {(['isFeatured', 'isBestSeller', 'isNewArrival', 'isActive'] as const).map((key) => (
                 <label key={key} className="flex items-center gap-2 cursor-pointer">

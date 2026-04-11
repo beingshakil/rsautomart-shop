@@ -59,40 +59,40 @@ export default function NewProductPage() {
   };
 
   return (
-    <div>
+    <div className="p-6 md:p-8">
       <h1 className="text-2xl font-bold mb-6">Add New Product</h1>
       <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
         <Card>
           <CardHeader><CardTitle>Basic Info</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <Label>Product Name *</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          <CardContent className="space-y-5">
+            <div className="grid sm:grid-cols-2 gap-5">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Product Name <span className="text-red-500">*</span></Label>
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Enter product name" required />
               </div>
-              <div>
-                <Label>SKU</Label>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">SKU</Label>
                 <Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="Auto-generated if empty" />
               </div>
-              <div>
-                <Label>Category *</Label>
-                <select className="w-full h-10 px-3 border rounded-md text-sm" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Category <span className="text-red-500">*</span></Label>
+                <select className="w-full h-10 px-3 border border-gray-200 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-red/30 focus:border-brand-red transition-colors" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required>
                   <option value="">Select Category</option>
                   {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
                 </select>
               </div>
-              <div>
-                <Label>Brand</Label>
-                <Input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} />
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Brand</Label>
+                <Input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} placeholder="Enter brand name" />
               </div>
             </div>
-            <div>
-              <Label>Short Description</Label>
-              <Input value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} />
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Short Description</Label>
+              <Input value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} placeholder="Brief product summary" />
             </div>
-            <div>
-              <Label>Full Description *</Label>
-              <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Full Description <span className="text-red-500">*</span></Label>
+              <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Detailed product description..." required />
             </div>
           </CardContent>
         </Card>
@@ -100,22 +100,22 @@ export default function NewProductPage() {
         <Card>
           <CardHeader><CardTitle>Pricing & Stock</CardTitle></CardHeader>
           <CardContent>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div>
-                <Label>Price (৳) *</Label>
-                <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+            <div className="grid sm:grid-cols-3 gap-5">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Price (৳) <span className="text-red-500">*</span></Label>
+                <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="0" required />
               </div>
-              <div>
-                <Label>Discount Price (৳)</Label>
-                <Input type="number" value={form.discountPrice} onChange={(e) => setForm({ ...form, discountPrice: e.target.value })} />
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Discount Price (৳)</Label>
+                <Input type="number" value={form.discountPrice} onChange={(e) => setForm({ ...form, discountPrice: e.target.value })} placeholder="Optional" />
               </div>
-              <div>
-                <Label>Stock Quantity</Label>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Stock Quantity</Label>
                 <Input type="number" value={form.stockQuantity} onChange={(e) => setForm({ ...form, stockQuantity: e.target.value })} />
               </div>
             </div>
-            <div className="mt-4">
-              <Label>Warranty</Label>
+            <div className="mt-5 space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Warranty</Label>
               <Input value={form.warranty} onChange={(e) => setForm({ ...form, warranty: e.target.value })} placeholder="e.g., 1 Year Warranty" />
             </div>
           </CardContent>
@@ -209,8 +209,8 @@ export default function NewProductPage() {
         <Card>
           <CardHeader><CardTitle>Additional Settings</CardTitle></CardHeader>
           <CardContent>
-            <div>
-              <Label>Tags (comma separated)</Label>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Tags (comma separated)</Label>
               <Input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="e.g., dash cam, 4k, electronics" />
             </div>
             <div className="flex flex-wrap gap-6 mt-4">
