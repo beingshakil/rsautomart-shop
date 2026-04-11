@@ -8,7 +8,7 @@ import TrustBadges from '@/components/home/TrustBadges';
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: 'https://rsautomart.shop',
+    canonical: 'https://www.rsautomart.shop',
   },
 };
 
@@ -16,11 +16,12 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'RS Automart',
-  url: 'https://rsautomart.shop',
+  alternateName: 'RS Automart Shop',
+  url: 'https://www.rsautomart.shop',
   description: 'Premium car & bike accessories shop in Bangladesh. Free delivery on orders above ৳999.',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://rsautomart.shop/search?q={search_term_string}',
+    target: 'https://www.rsautomart.shop/search?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 };
@@ -29,8 +30,8 @@ const orgJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'RS Automart',
-  url: 'https://rsautomart.shop',
-  logo: 'https://rsautomart.shop/logo-small.png',
+  url: 'https://www.rsautomart.shop',
+  logo: 'https://www.rsautomart.shop/logo-small.png',
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+880-1919-242866',
