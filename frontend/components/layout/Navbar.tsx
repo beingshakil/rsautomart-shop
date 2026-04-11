@@ -178,8 +178,8 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <>
-          <div className="lg:hidden fixed inset-0 z-[59] bg-black/40" onClick={() => setMobileMenuOpen(false)} />
-          <div className="lg:hidden fixed inset-y-0 left-0 z-[60] w-[80%] max-w-sm bg-white flex flex-col animate-in slide-in-from-left duration-300 shadow-2xl">
+          <div className="lg:hidden fixed inset-0 z-59 bg-black/40" onClick={() => setMobileMenuOpen(false)} />
+          <div className="lg:hidden fixed inset-y-0 left-0 z-60 w-[80%] max-w-sm bg-white flex flex-col animate-in slide-in-from-left duration-300 shadow-2xl">
             <div className="flex items-center justify-between px-4 py-4 border-b bg-white/80 backdrop-blur-md sticky top-0 z-10">
               <Image src="/logo-small.png" alt="RS Automart" width={140} height={40} className="h-8 w-auto" />
               <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -200,20 +200,20 @@ export default function Navbar() {
               </form>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-4 py-4 flex flex-col scrollbar-hide py-10">
+            <nav className="flex-1 overflow-y-auto px-4 py-4 flex flex-col scrollbar-hide">
               <p className="text-[10px] uppercase font-black text-gray-400 mb-4 px-2 tracking-widest leading-none">Main Menu</p>
               <div className="space-y-1 mb-6">
-                <Link 
-                  href="/shop" 
-                  className="flex items-center justify-between py-3.5 px-3 rounded-2xl hover:bg-gray-50 text-gray-900 font-bold uppercase tracking-wide transition-all group"
+                <Link
+                  href="/shop"
+                  className="flex items-center justify-between py-3 px-3 rounded-2xl hover:bg-gray-50 text-gray-900 font-bold text-sm uppercase tracking-wide transition-all group"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   All Products
                   <ChevronDown size={14} className="-rotate-90 text-gray-300 group-hover:text-brand-red transition-colors" />
                 </Link>
-                <Link 
-                  href="/offers" 
-                  className="flex items-center justify-between py-3.5 px-3 rounded-2xl hover:bg-gray-50 text-brand-red font-black uppercase tracking-wide transition-all group"
+                <Link
+                  href="/offers"
+                  className="flex items-center justify-between py-3 px-3 rounded-2xl hover:bg-gray-50 text-brand-red font-bold text-sm uppercase tracking-wide transition-all group"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <span className="flex items-center gap-3">
@@ -284,18 +284,18 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                <Link 
-                  href="/login" 
-                  className="bg-brand-black text-white p-5 rounded-[2rem] flex items-center justify-between font-black uppercase tracking-widest shadow-xl shadow-gray-200"
+                <Link
+                  href="/login"
+                  className="bg-brand-black text-white px-4 py-3 rounded-2xl flex items-center justify-between text-xs font-bold uppercase tracking-wider shadow-md shadow-gray-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign In / Register
-                  <User size={18} className="text-gray-400" />
+                  <User size={16} className="text-gray-400" />
                 </Link>
               )}
             </nav>
 
-            <div className="p-6 border-t border-gray-100 bg-gray-50">
+            <div className="p-6 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-6 border-t border-gray-100 bg-gray-50 shrink-0">
                <p className="text-[10px] uppercase font-black text-gray-400 mb-4 tracking-tighter">Support & Contact</p>
                <div className="flex flex-col gap-3">
                   <a href="tel:+8801919242866" className="text-sm font-bold text-gray-700 flex items-center gap-2">

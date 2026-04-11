@@ -40,7 +40,7 @@ export default function FloatingContact() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-20 right-4 md:bottom-20 md:right-20 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-24 md:bottom-8 right-4 md:right-[max(1rem,calc(50vw-45rem+1rem))] z-55 flex flex-col items-end gap-3">
       {/* Contact options */}
       <div
         className={`flex flex-col gap-3 transition-all duration-300 ${

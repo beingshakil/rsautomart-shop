@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Eye, ShoppingCart, Plus, Minus } from 'lucide-react';
-import { useState } from 'react';
+import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { formatPrice, getDiscountPercent } from '@/lib/utils';
@@ -16,7 +15,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
   const { addItem, removeItem, isInWishlist } = useWishlistStore();
   const isWished = isInWishlist(product._id);
-  const [qty, setQty] = useState(1);
 
   const hasDiscount = product.discountPrice && product.discountPrice < product.price;
   const displayPrice = hasDiscount ? product.discountPrice : product.price;
@@ -72,13 +70,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           >
             <Eye size={14} />
           </Link>
-          <button
-            onClick={toggleWishlist}
-            className="w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-brand-red hover:bg-gray-50 transition-colors"
-            title="Add to Wishlist"
-          >
-            <Heart size={14} className={isWished ? 'fill-red-500 text-red-500' : ''} />
-          </button>
         </div>
       </div>
 
@@ -101,34 +92,27 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {/* Bottom: Qty + Add to Cart */}
+        {/* Bottom: Wishlist + Add to Cart */}
         <div className="flex items-stretch gap-1.5 sm:gap-2 border-t border-gray-100 pt-2.5 sm:pt-3">
-          {/* Quantity Selector */}
-          <div className="flex items-center border border-gray-200 rounded-md overflow-hidden shrink-0">
-            <button
-              type="button"
-              aria-label="Decrease quantity"
-              onClick={() => setQty(Math.max(1, qty - 1))}
-              className="w-8 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
-            >
-              <Minus size={14} />
-            </button>
-            <span className="w-6 sm:w-8 text-center text-xs sm:text-sm font-semibold select-none">{qty}</span>
-            <button
-              type="button"
-              aria-label="Increase quantity"
-              onClick={() => setQty(qty + 1)}
-              className="w-8 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-gray-600 hover:text-brand-red hover:bg-gray-50 transition-colors"
-            >
-              <Plus size={14} />
-            </button>
-          </div>
+          {/* Wishlist Button */}
+          <button
+            type="button"
+            onClick={toggleWishlist}
+            aria-label="Add to Wishlist"
+            title="Add to Wishlist"
+            className={`shrink-0 w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center border rounded-md transition-colors ${
+              isWished
+                ? 'border-brand-red text-brand-red bg-red-50'
+                : 'border-gray-200 text-gray-600 hover:text-brand-red hover:border-brand-red hover:bg-gray-50'
+            }`}
+          >
+            <Heart size={16} className={isWished ? 'fill-brand-red' : ''} />
+          </button>
           {/* Add to Cart Button */}
           <button
             onClick={() => {
               if (product.stock?.status !== 'out_of_stock') {
-                addToCart(product, qty);
-                setQty(1);
+                addToCart(product, 1);
               }
             }}
             disabled={product.stock?.status === 'out_of_stock'}

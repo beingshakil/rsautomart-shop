@@ -35,12 +35,12 @@ export default function FeaturedCategories() {
       <SectionHeader title="Top Categories" />
 
       {/* Scrollable Category Row */}
-      <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-4 px-1">
+      <div className="flex gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-4 px-1">
         {loading
           ? Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center flex-shrink-0">
-                <Skeleton className="w-20 h-20 md:w-24 md:h-24 rounded-full" />
-                <Skeleton className="h-3 w-16 mt-2" />
+                <Skeleton className="w-28 h-28 md:w-36 md:h-36 rounded-full" />
+                <Skeleton className="h-3 w-20 mt-3" />
               </div>
             ))
           : categories.map((cat, idx) => {
@@ -51,22 +51,22 @@ export default function FeaturedCategories() {
                   href={`/shop/${cat.slug}`}
                   className="flex flex-col items-center flex-shrink-0 group"
                 >
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-[3px] border-gray-200 group-hover:border-brand-red transition-colors duration-300 bg-gray-50 flex items-center justify-center">
+                  <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-[3px] border-gray-200 group-hover:border-brand-red transition-colors duration-300 bg-gray-50 flex items-center justify-center">
                     {cat.image?.url ? (
                       <Image
                         src={cat.image.url}
                         alt={cat.name}
-                        width={96}
-                        height={96}
+                        width={144}
+                        height={144}
                         priority={idx < 4}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
 
                     ) : (
-                      <Icon size={32} className="text-gray-400 group-hover:text-brand-red transition-colors duration-300" />
+                      <Icon size={44} className="text-gray-400 group-hover:text-brand-red transition-colors duration-300" />
                     )}
                   </div>
-                  <span className="mt-2 text-xs md:text-sm font-semibold text-gray-700 group-hover:text-brand-red transition-colors">
+                  <span className="mt-3 text-sm md:text-base font-semibold text-gray-700 group-hover:text-brand-red transition-colors">
                     {cat.name}
                   </span>
                 </Link>

@@ -25,7 +25,7 @@ export default function BestSellers() {
           <SortDropdown value={sort} onChange={setSort} />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {loading
             ? Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-lg p-2">
