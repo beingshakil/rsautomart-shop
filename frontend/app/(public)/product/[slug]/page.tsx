@@ -98,14 +98,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* Image Gallery */}
-        <div>
-          <div className="aspect-square relative rounded-xl overflow-hidden bg-gray-50 mb-4 border border-gray-200">
+        <div className="max-w-lg w-full">
+          <div className="aspect-square relative rounded-xl overflow-hidden bg-white mb-4 border border-gray-200">
             {product.images?.[selectedImage]?.url ? (
               <Image
                 src={product.images[selectedImage].url}
                 alt={product.name}
                 fill
-                className="object-contain p-4"
+                className="object-contain p-6"
                 priority
               />
             ) : (
