@@ -7,6 +7,9 @@ import NewArrivals from '@/components/home/NewArrivals';
 import TrustBadges from '@/components/home/TrustBadges';
 
 export const metadata: Metadata = {
+  title: 'Car Accessories Online in Bangladesh - Interior Car Lights & Cleaner',
+  description:
+    'Buy car accessories online in Bangladesh. Shop car interior cleaner, interior car lights & more at the best car accessories shop. Free delivery over ৳999!',
   alternates: {
     canonical: 'https://www.rsautomart.shop',
   },
@@ -18,7 +21,7 @@ const jsonLd = {
   name: 'RS Automart',
   alternateName: 'RS Automart Shop',
   url: 'https://www.rsautomart.shop',
-  description: 'Premium car & bike accessories shop in Bangladesh. Free delivery on orders above ৳999.',
+  description: 'Buy car accessories online at RS Automart — your trusted car accessories shop in Bangladesh. Shop car interior cleaner, interior car lights & more.',
   potentialAction: {
     '@type': 'SearchAction',
     target: 'https://www.rsautomart.shop/search?q={search_term_string}',
@@ -49,7 +52,7 @@ export default function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-      <h1 className="sr-only">RS Automart – Premium Car & Bike Accessories in Bangladesh</h1>
+      <h1 className="sr-only">Car Accessories Online - Best Car Accessories Shop in Bangladesh</h1>
       <HeroBanner />
       <FeaturedCategories />
       <FlashSale />

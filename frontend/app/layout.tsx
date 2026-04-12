@@ -12,21 +12,21 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rsautomart.shop"),
   title: {
-    default: "RS Automart - Premium Auto Accessories in Bangladesh",
-    template: "%s | RS Automart",
+    default: "Car Accessories Online in Bangladesh - Interior Car Lights & Cleaner",
+    template: "%s",
   },
   description:
-    "Shop premium car & bike accessories, electronics, tools, and more. Free delivery on orders above ৳999. Cash on Delivery available.",
-  keywords: ["car accessories", "bike accessories", "auto parts", "bangladesh", "online shop"],
+    "Buy car accessories online in Bangladesh. Shop car interior cleaner, interior car lights & more at the best car accessories shop. Free delivery over ৳999!",
+  keywords: ["car accessories online", "car accessories shop in Bangladesh", "car interior cleaner", "interior car lights", "car accessories shop near me", "bike accessories", "auto parts"],
   applicationName: "RS Automart",
   openGraph: {
     siteName: "RS Automart",
     type: "website",
     locale: "en_BD",
     url: "https://www.rsautomart.shop",
-    title: "RS Automart - Premium Auto Accessories in Bangladesh",
+    title: "Car Accessories Online in Bangladesh - Interior Car Lights & Cleaner",
     description:
-      "Shop premium car & bike accessories, electronics, tools, and more. Free delivery on orders above ৳999. Cash on Delivery available.",
+      "Buy car accessories online in Bangladesh. Shop car interior cleaner, interior car lights & more at the best car accessories shop. Free delivery over ৳999!",
     images: [
       {
         url: "/logo.png",
