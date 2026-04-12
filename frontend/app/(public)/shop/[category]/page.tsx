@@ -37,6 +37,7 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-360 mx-auto px-4 py-8">
+        <h1 className="sr-only">{categoryData?.name || 'Category'} - Car Accessories Online</h1>
         <SectionHeader title={categoryData?.name || 'Category'} />
 
         {categoryData?.description && (

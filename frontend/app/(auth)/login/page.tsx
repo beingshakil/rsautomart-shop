@@ -31,7 +31,7 @@ export default function LoginPage() {
         </Link>
       </div>
 
-      <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Welcome Back</h2>
+      <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">Welcome Back</h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>

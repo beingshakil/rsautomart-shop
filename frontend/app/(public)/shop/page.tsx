@@ -23,6 +23,7 @@ export default function ShopPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-360 mx-auto px-4 py-8">
+        <h1 className="sr-only">Shop Car Accessories Online in Bangladesh</h1>
         {/* Section Title */}
         <SectionHeader title="All Products" />
 

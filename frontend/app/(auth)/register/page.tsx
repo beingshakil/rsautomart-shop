@@ -41,7 +41,7 @@ export default function RegisterPage() {
         </Link>
       </div>
 
-      <h2 className="text-2xl font-bold text-gray-900 text-center mb-5">Create Account</h2>
+      <h1 className="text-2xl font-bold text-gray-900 text-center mb-5">Create Account</h1>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
