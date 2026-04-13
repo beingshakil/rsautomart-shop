@@ -32,6 +32,8 @@ export interface IProduct extends Document {
   warranty?: string;
   ratings: { average: number; count: number };
   totalSold: number;
+  metaTitle?: string;
+  metaDescription?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -88,6 +90,8 @@ const productSchema = new Schema<IProduct>(
       count: { type: Number, default: 0 },
     },
     totalSold: { type: Number, default: 0 },
+    metaTitle: { type: String, trim: true },
+    metaDescription: { type: String, trim: true },
   },
   { timestamps: true }
 );

@@ -22,6 +22,7 @@ export default function NewProductPage() {
     name: '', description: '', shortDescription: '', price: '', discountPrice: '',
     category: '', brand: '', sku: '', stockQuantity: '0', warranty: '',
     tags: '', isFeatured: false, isBestSeller: false, isNewArrival: false, isActive: true,
+    metaTitle: '', metaDescription: '',
   });
   const [variants, setVariants] = useState<{ type: string; value: string; price: string; stock: string }[]>([]);
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>([]);
@@ -93,6 +94,16 @@ export default function NewProductPage() {
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Full Description <span className="text-red-500">*</span></Label>
               <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Detailed product description..." required />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-5 pt-2 border-t border-gray-100">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Meta Title (SEO)</Label>
+                <Input value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} placeholder="SEO title" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Meta Description (SEO)</Label>
+                <Input value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} placeholder="SEO description" />
+              </div>
             </div>
           </CardContent>
         </Card>

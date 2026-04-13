@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
@@ -53,11 +54,15 @@ export default function HeroBanner() {
           {banners.map((banner, i) => (
             <div key={i} className="w-full flex-shrink-0 relative h-full">
               {/* Background Image */}
-              <div className="absolute inset-0 overflow-hidden">
-                <img
+              <div className="absolute inset-0 overflow-hidden bg-brand-black">
+                <Image
                   src={banner.img}
                   alt={banner.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-0 animate-in fade-in duration-500 fill-mode-forwards"
+                  onLoadingComplete={(img: HTMLImageElement) => img.classList.remove('opacity-0')}
                 />
               </div>
               {/* Overlay Gradient */}

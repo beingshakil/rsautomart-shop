@@ -14,6 +14,10 @@ export const sendOrderConfirmation = async (
   totalAmount: number,
   items: { name: string; quantity: number; price: number }[]
 ): Promise<void> => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log('Skipping email confirmation: No credentials set.');
+    return;
+  }
   const itemsHtml = items
     .map((item) => `<tr><td>${item.name}</td><td>${item.quantity}</td><td>৳${item.price}</td></tr>`)
     .join('');
@@ -49,7 +53,10 @@ export const sendNewOrderNotification = async (
   totalAmount: number,
   customerName: string
 ): Promise<void> => {
-  if (!process.env.EMAIL_USER) return;
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log('Skipping admin notification: No credentials set.');
+    return;
+  }
 
   await transporter.sendMail({
     from: `"RS Automart" <${process.env.EMAIL_USER}>`,

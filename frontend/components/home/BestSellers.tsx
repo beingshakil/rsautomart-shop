@@ -34,8 +34,8 @@ export default function BestSellers() {
                   <Skeleton className="h-4 w-1/2 mt-2" />
                 </div>
               ))
-            : products.slice(0, 8).map((product: any) => (
-                <ProductCard key={product._id} product={product} />
+            : products.slice(0, 8).map((product: any, i: number) => (
+                <ProductCard key={product._id} product={product} priority={i < 4} />
               ))}
         </div>
       </div>

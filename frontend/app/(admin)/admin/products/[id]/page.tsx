@@ -45,6 +45,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           tags: (product.tags || []).join(', '),
           isFeatured: product.isFeatured, isBestSeller: product.isBestSeller,
           isNewArrival: product.isNewArrival, isActive: product.isActive,
+          metaTitle: product.metaTitle || '', metaDescription: product.metaDescription || '',
           existingImages: product.images || [],
         });
         setVariants(product.variants || []);
@@ -115,6 +116,16 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Full Description</Label>
               <Textarea rows={5} value={form.description || ''} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-5 pt-2 border-t border-gray-100">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Meta Title (SEO)</Label>
+                <Input value={form.metaTitle || ''} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} placeholder="SEO title" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Meta Description (SEO)</Label>
+                <Input value={form.metaDescription || ''} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} placeholder="SEO description" />
+              </div>
             </div>
           </CardContent>
         </Card>

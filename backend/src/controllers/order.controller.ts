@@ -36,7 +36,7 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
           product: product._id,
           name: product.name,
           image: product.images?.[0]?.url || '',
-          price: product.price, // SOURCE OF TRUTH
+          price: product.discountPrice && product.discountPrice < product.price ? product.discountPrice : product.price,
           quantity: item.quantity,
           variant: item.variant,
         });
@@ -62,7 +62,7 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
           product: product._id,
           name: product.name,
           image: product.images?.[0]?.url || '',
-          price: product.price, // SOURCE OF TRUTH
+          price: product.discountPrice && product.discountPrice < product.price ? product.discountPrice : product.price,
           quantity: item.quantity,
           variant: item.variant,
         });
@@ -83,7 +83,7 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
     const division = shippingAddress.division?.trim().toLowerCase();
     const isDhaka = division === 'dhaka' || (district ? DHAKA_DISTRICTS.includes(district) : false);
     
-    let shippingCost = isDhaka ? 60 : 120;
+    let shippingCost = isDhaka ? 70 : 120;
     if (subtotal >= FREE_SHIPPING_MIN) shippingCost = 0;
 
     let discount = 0;
@@ -129,15 +129,16 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
       await Coupon.findOneAndUpdate({ code: normalizedCouponCode }, { $inc: { usedCount: 1 } });
     }
 
-    // 6. Notifications
-    try {
+    // 6. Notifications (Run in background to prevent hanging)
+    if (process.env.EMAIL_USER) {
       const customerEmail = req.user?.email || shippingAddress?.email;
       const customerName = req.user?.name || shippingAddress?.name || 'Customer';
       
-      await sendOrderConfirmation(customerEmail, order.orderNumber, totalAmount, orderItems);
-      await sendNewOrderNotification(order.orderNumber, totalAmount, customerName);
-    } catch (e) {
-      console.error('Email error:', e);
+      sendOrderConfirmation(customerEmail, order.orderNumber, totalAmount, orderItems)
+        .catch(err => console.error('Confirmation email error:', err));
+      
+      sendNewOrderNotification(order.orderNumber, totalAmount, customerName)
+        .catch(err => console.error('Admin notification email error:', err));
     }
 
     res.status(201).json({ order });

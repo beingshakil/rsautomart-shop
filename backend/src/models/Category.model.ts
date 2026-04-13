@@ -7,6 +7,8 @@ export interface ICategory extends Document {
   description?: string;
   parent?: mongoose.Types.ObjectId;
   isActive: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +24,8 @@ const categorySchema = new Schema<ICategory>(
     description: { type: String },
     parent: { type: Schema.Types.ObjectId, ref: 'Category', default: null },
     isActive: { type: Boolean, default: true },
+    metaTitle: { type: String, trim: true },
+    metaDescription: { type: String, trim: true },
   },
   { timestamps: true }
 );

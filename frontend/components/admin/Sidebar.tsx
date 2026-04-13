@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, FolderTree, ShoppingCart, Users, Tag, ArrowLeft, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, FolderTree, ShoppingCart, Users, Tag, ArrowLeft, Menu, X, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const menuItems = [
@@ -13,6 +13,7 @@ const menuItems = [
   { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { href: '/admin/customers', icon: Users, label: 'Customers' },
   { href: '/admin/offers', icon: Tag, label: 'Offers & Coupons' },
+  { href: '/admin/flash-sale', icon: Zap, label: 'Flash Sale' },
 ];
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {

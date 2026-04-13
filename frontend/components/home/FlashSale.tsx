@@ -7,25 +7,32 @@ import { Zap } from 'lucide-react';
 import api from '@/lib/api';
 
 export default function FlashSale() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    api.get('/products/featured')
-      .then(({ data }) => setProducts(data.products?.slice(0, 4) || []))
+    api.get('/flash-sale')
+      .then(({ data }) => setData(data.flashSale))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    if (!data?.endDate) return;
+    const endTime = new Date(data.endDate).getTime();
 
     const timer = setInterval(() => {
-      const now = new Date();
-      const diff = endOfDay.getTime() - now.getTime();
-      if (diff <= 0) return;
+      const now = new Date().getTime();
+      const diff = endTime - now;
+      
+      if (diff <= 0) {
+        clearInterval(timer);
+        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+        setData(null); // Hide section if time is up
+        return;
+      }
+
       setTimeLeft({
         hours: Math.floor(diff / (1000 * 60 * 60)),
         minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
@@ -33,9 +40,12 @@ export default function FlashSale() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [data]);
 
-  if (!loading && products.length === 0) return null;
+  if (loading) return null; // Or show skeleton
+  if (!data || !data.products?.length) return null;
+
+  const products = data.products;
 
   return (
     <section className="bg-linear-to-r from-brand-red to-red-700 py-14 md:py-16">
@@ -69,7 +79,7 @@ export default function FlashSale() {
                   <Skeleton className="h-4 w-1/2 mt-2" />
                 </div>
               ))
-            : products.map((product) => (
+            : products.map((product: any) => (
                 <ProductCard key={product._id} product={product} />
               ))}
         </div>

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import slugify from 'slugify';
 import Category from '../models/Category.model';
 import cloudinary from '../config/cloudinary';
+import sharp from 'sharp';
 
 export const getCategories = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -27,7 +28,7 @@ export const getCategoryBySlug = async (req: Request, res: Response): Promise<vo
 
 export const createCategory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, description, parent } = req.body;
+    const { name, description, parent, metaTitle, metaDescription } = req.body;
     const slug = slugify(name, { lower: true, strict: true });
 
     let image;
@@ -37,12 +38,17 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
           { folder: 'rs-automart/categories' },
           (error, result) => (error ? reject(error) : resolve(result))
         );
-        stream.end(req.file!.buffer);
+        sharp(req.file!.buffer)
+          .resize(500, 500, { fit: 'cover', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+          .webp({ quality: 80 })
+          .toBuffer()
+          .then(optimizedBuffer => stream.end(optimizedBuffer))
+          .catch(reject);
       });
       image = { url: result.secure_url, publicId: result.public_id };
     }
 
-    const category = await Category.create({ name, slug, description, parent, image });
+    const category = await Category.create({ name, slug, description, parent, image, metaTitle, metaDescription });
     res.status(201).json({ category });
   } catch (error: any) {
     console.error('Create Category Error:', error);
@@ -52,16 +58,17 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
 
 export const updateCategory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, description, parent, isActive } = req.body;
-    const updateData: any = { description, parent, isActive };
+    const { name, description, parent, isActive, removeImage, metaTitle, metaDescription } = req.body;
+    const updateData: any = { description, parent: parent || null, isActive, metaTitle, metaDescription };
 
     if (name) {
       updateData.name = name;
       updateData.slug = slugify(name, { lower: true, strict: true });
     }
 
+    const existing = await Category.findById(req.params.id);
+
     if (req.file) {
-      const existing = await Category.findById(req.params.id);
       if (existing?.image?.publicId) {
         await cloudinary.uploader.destroy(existing.image.publicId);
       }
@@ -70,9 +77,19 @@ export const updateCategory = async (req: Request, res: Response): Promise<void>
           { folder: 'rs-automart/categories' },
           (error, result) => (error ? reject(error) : resolve(result))
         );
-        stream.end(req.file!.buffer);
+        sharp(req.file!.buffer)
+          .resize(500, 500, { fit: 'cover', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+          .webp({ quality: 80 })
+          .toBuffer()
+          .then(optimizedBuffer => stream.end(optimizedBuffer))
+          .catch(reject);
       });
       updateData.image = { url: result.secure_url, publicId: result.public_id };
+    } else if (removeImage === 'true') {
+      if (existing?.image?.publicId) {
+        await cloudinary.uploader.destroy(existing.image.publicId);
+      }
+      updateData.image = null;
     }
 
     const category = await Category.findByIdAndUpdate(req.params.id, updateData, { new: true });

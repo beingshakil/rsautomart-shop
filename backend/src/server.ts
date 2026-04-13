@@ -18,6 +18,7 @@ import cartRoutes from './routes/cart.routes';
 import orderRoutes from './routes/order.routes';
 import paymentRoutes from './routes/payment.routes';
 import adminRoutes from './routes/admin.routes';
+import flashSaleRoutes from './routes/flashSale.routes';
 
 
 const app = express();
@@ -59,6 +60,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/flash-sale', flashSaleRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

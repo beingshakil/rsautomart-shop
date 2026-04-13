@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,11 +12,12 @@ import api from '@/lib/api';
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<any[]>([]);
-  const [form, setForm] = useState({ name: '', description: '', parent: '' });
+  const [form, setForm] = useState({ name: '', description: '', parent: '', metaTitle: '', metaDescription: '' });
   const [editId, setEditId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [existingImage, setExistingImage] = useState<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
 
   const fetchCategories = () => {
     api.get('/categories/admin').then(({ data }) => setCategories(data.categories)).catch(() => {});
@@ -31,8 +32,11 @@ export default function AdminCategoriesPage() {
       const formData = new FormData();
       formData.append('name', form.name);
       formData.append('description', form.description);
+      formData.append('metaTitle', form.metaTitle);
+      formData.append('metaDescription', form.metaDescription);
       if (form.parent) formData.append('parent', form.parent);
       if (image) formData.append('image', image);
+      if (removeImage) formData.append('removeImage', 'true');
 
       if (editId) {
         await api.put(`/categories/${editId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -41,10 +45,11 @@ export default function AdminCategoriesPage() {
         await api.post('/categories', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Category created');
       }
-      setForm({ name: '', description: '', parent: '' });
+      setForm({ name: '', description: '', parent: '', metaTitle: '', metaDescription: '' });
       setEditId(null);
       setImage(null);
       setExistingImage(null);
+      setRemoveImage(false);
       setOpen(false);
       fetchCategories();
     } catch (error: any) {
@@ -64,10 +69,17 @@ export default function AdminCategoriesPage() {
   };
 
   const startEdit = (cat: any) => {
-    setForm({ name: cat.name, description: cat.description || '', parent: cat.parent?._id || '' });
+    setForm({ 
+      name: cat.name, 
+      description: cat.description || '', 
+      parent: cat.parent?._id || '',
+      metaTitle: cat.metaTitle || '',
+      metaDescription: cat.metaDescription || ''
+    });
     setEditId(cat._id);
     setExistingImage(cat.image?.url || null);
     setImage(null);
+    setRemoveImage(false);
     setOpen(true);
   };
 
@@ -76,7 +88,7 @@ export default function AdminCategoriesPage() {
       {/* Sticky Header - No gaps */}
       <div className="sticky top-0 z-20 bg-gray-50 px-6 py-6 border-b border-gray-100 shadow-sm flex items-center justify-between">
         <h1 className="text-2xl font-bold">Categories ({categories.length})</h1>
-        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) { setEditId(null); setForm({ name: '', description: '', parent: '' }); setImage(null); setExistingImage(null); } }}>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) { setEditId(null); setForm({ name: '', description: '', parent: '', metaTitle: '', metaDescription: '' }); setImage(null); setExistingImage(null); setRemoveImage(false); } }}>
           <DialogTrigger render={<Button className="bg-brand-red hover:bg-brand-red-dark" />}>
             <Plus size={16} className="mr-1" /> Add Category
           </DialogTrigger>
@@ -100,16 +112,43 @@ export default function AdminCategoriesPage() {
                   {categories.filter((c) => c._id !== editId).map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
                 </select>
               </div>
+
+              <div className="border-t pt-2 space-y-3">
+                <p className="text-[11px] font-bold uppercase text-gray-400 tracking-wider">SEO Metadata</p>
+                <div>
+                  <Label>Meta Title</Label>
+                  <Input value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} placeholder="SEO Title" />
+                </div>
+                <div>
+                  <Label>Meta Description</Label>
+                  <textarea 
+                    className="w-full h-20 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-red-light"
+                    value={form.metaDescription} 
+                    onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} 
+                    placeholder="SEO Description..."
+                  />
+                </div>
+              </div>
+
               <div>
                 <Label>Image</Label>
                 <div className="flex items-center gap-4 mt-2">
-                  {(image || existingImage) && (
-                    <div className="w-16 h-16 rounded overflow-hidden border border-gray-200 flex-shrink-0">
-                      <img
-                        src={image ? URL.createObjectURL(image) : existingImage!}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
+                  {(image || (existingImage && !removeImage)) && (
+                    <div className="relative group">
+                      <div className="w-16 h-16 rounded overflow-hidden border border-gray-200 flex-shrink-0">
+                        <img
+                          src={image ? URL.createObjectURL(image) : existingImage!}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setImage(null); if (existingImage) setRemoveImage(true); }}
+                        className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X size={12} />
+                      </button>
                     </div>
                   )}
                   <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)}

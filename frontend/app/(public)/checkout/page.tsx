@@ -60,8 +60,8 @@ export default function CheckoutPage() {
   const normalizedDivision = form.division.trim().toLowerCase();
   const isDhaka = normalizedDivision === 'dhaka' || DHAKA_DISTRICTS.includes(normalizedDistrict);
   
-  // Hardened logic: Free shipping over 999, else 60/120
-  const shippingCost = totalAmount >= 999 ? 0 : isDhaka ? 60 : 120;
+  // Free shipping over 999, else 70/120
+  const shippingCost = totalAmount >= 999 ? 0 : isDhaka ? 70 : 120;
   const couponDiscount = coupon?.discount || 0;
   const grandTotal = totalAmount + shippingCost - couponDiscount;
 
@@ -246,6 +246,18 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
+
+              {totalAmount < 999 ? (
+                <div className="bg-red-50 text-red-700 text-[11px] px-3 py-2 rounded-lg mb-6 flex items-center gap-2">
+                  <span className="text-sm">🚚</span>
+                  <span>Add <strong>{formatPrice(999 - totalAmount)}</strong> more for <strong>FREE Delivery!</strong></span>
+                </div>
+              ) : (
+                <div className="bg-green-50 text-green-700 text-[11px] px-3 py-2 rounded-lg mb-6 flex items-center gap-2">
+                  <span className="text-sm">🎉</span>
+                  <span>You've unlocked <strong>FREE Delivery!</strong></span>
+                </div>
+              )}
 
               <div className="space-y-3 text-sm text-gray-600 mb-6 border-b border-gray-100 pb-4">
                 <div className="flex justify-between">
