@@ -41,6 +41,7 @@ export default function NewProductPage() {
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, val]) => {
+        if (key === 'tags') return; // Handled separately below
         if (typeof val === 'boolean') formData.append(key, String(val));
         else formData.append(key, val as string);
       });

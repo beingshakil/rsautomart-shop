@@ -10,6 +10,7 @@ import {
   deleteProduct,
   updateStock,
   getAdminProducts,
+  getProductById,
 } from '../controllers/product.controller';
 
 import { getProductReviews, createReview, deleteReview } from '../controllers/review.controller';
@@ -25,6 +26,7 @@ router.get('/featured', getFeaturedProducts);
 router.get('/best-sellers', getBestSellers);
 router.get('/new-arrivals', getNewArrivals);
 router.get('/admin', verifyToken, isAdmin, getAdminProducts);
+router.get('/admin/:id', verifyToken, isAdmin, getProductById);
 router.get('/:slug', getProductBySlug);
 
 

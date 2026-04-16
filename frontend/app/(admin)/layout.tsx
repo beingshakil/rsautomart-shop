@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/Sidebar';
 import { useAuthStore } from '@/store/authStore';
+import AdminLoading from './admin/loading';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, _hasHydrated } = useAuthStore();
@@ -15,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [user, _hasHydrated, router]);
 
-  if (!_hasHydrated) return null; // Show nothing or a loading spinner until storage is loaded
+  if (!_hasHydrated) return <AdminLoading />; 
   if (!user || user.role !== 'admin') return null;
 
 

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import HeroBanner from '@/components/home/HeroBanner';
 import FeaturedCategories from '@/components/home/FeaturedCategories';
-import FlashSale from '@/components/home/FlashSale';
-import BestSellers from '@/components/home/BestSellers';
-import NewArrivals from '@/components/home/NewArrivals';
-import TrustBadges from '@/components/home/TrustBadges';
+
+const FlashSale = dynamic(() => import('@/components/home/FlashSale'), { ssr: true });
+const BestSellers = dynamic(() => import('@/components/home/BestSellers'), { ssr: true });
+const NewArrivals = dynamic(() => import('@/components/home/NewArrivals'), { ssr: true });
+const TrustBadges = dynamic(() => import('@/components/home/TrustBadges'), { ssr: true });
 
 export const metadata: Metadata = {
   title: 'Car Accessories Online in Bangladesh - Interior Car Lights & Cleaner',

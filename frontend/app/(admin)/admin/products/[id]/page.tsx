@@ -26,32 +26,40 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [specs, setSpecs] = useState<any[]>([]);
 
   useEffect(() => {
-    Promise.all([
-      api.get('/categories'),
-      api.get(`/products?limit=1000`), // We need product by ID, use the list
-    ]).then(([catRes]) => {
-      setCategories(catRes.data.categories);
+    setLoading(true);
+    api.get('/categories').then(({ data }) => {
+      setCategories(data.categories);
     }).catch(() => {});
 
-    // Fetch product by ID via search
-    api.get(`/products?limit=1000`).then(({ data }) => {
-      const product = data.products.find((p: any) => p._id === id);
+    api.get(`/products/admin/${id}`).then(({ data }) => {
+      const { product } = data;
       if (product) {
         setForm({
-          name: product.name, description: product.description, shortDescription: product.shortDescription || '',
-          price: String(product.price), discountPrice: String(product.discountPrice || ''),
-          category: product.category?._id || '', brand: product.brand || '', sku: product.sku,
-          stockQuantity: String(product.stock?.quantity || 0), warranty: product.warranty || '',
+          name: product.name,
+          description: product.description,
+          shortDescription: product.shortDescription || '',
+          price: String(product.price),
+          discountPrice: String(product.discountPrice || ''),
+          category: product.category?._id || product.category || '',
+          brand: product.brand || '',
+          sku: product.sku,
+          stockQuantity: String(product.stock?.quantity || 0),
+          warranty: product.warranty || '',
           tags: (product.tags || []).join(', '),
-          isFeatured: product.isFeatured, isBestSeller: product.isBestSeller,
-          isNewArrival: product.isNewArrival, isActive: product.isActive,
-          metaTitle: product.metaTitle || '', metaDescription: product.metaDescription || '',
+          isFeatured: product.isFeatured,
+          isBestSeller: product.isBestSeller,
+          isNewArrival: product.isNewArrival,
+          isActive: product.isActive,
+          metaTitle: product.metaTitle || '',
+          metaDescription: product.metaDescription || '',
           existingImages: product.images || [],
         });
         setVariants(product.variants || []);
         setSpecs(product.specifications || []);
       }
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => {
+      toast.error('Failed to load product details');
+    }).finally(() => setLoading(false));
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +68,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, val]) => {
+        if (key === 'tags') return; // Handled separately below
         if (key === 'existingImages') formData.append(key, JSON.stringify(val));
         else if (typeof val === 'boolean') formData.append(key, String(val));
         else formData.append(key, val as string);

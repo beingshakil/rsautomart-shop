@@ -1,11 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+const Sheet = dynamic(() => import('@/components/ui/sheet').then((mod) => mod.Sheet), { ssr: false });
+const SheetContent = dynamic(() => import('@/components/ui/sheet').then((mod) => mod.SheetContent), { ssr: false });
+const SheetTrigger = dynamic(() => import('@/components/ui/sheet').then((mod) => mod.SheetTrigger), { ssr: false });
+const ProductFilter = dynamic(() => import('@/components/product/ProductFilter'), { ssr: false });
+
 import ProductGrid from '@/components/product/ProductGrid';
-import ProductFilter from '@/components/product/ProductFilter';
 import SortDropdown from '@/components/product/SortDropdown';
 import SectionHeader from '@/components/product/SectionHeader';
 import { useProducts } from '@/hooks/useProducts';

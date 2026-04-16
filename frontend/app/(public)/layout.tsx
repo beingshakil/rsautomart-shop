@@ -1,7 +1,8 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import MobileNav from '@/components/layout/MobileNav';
-import FloatingContact from '@/components/layout/FloatingContact';
+import dynamic from 'next/dynamic';
+const FloatingContact = dynamic(() => import('@/components/layout/FloatingContact'));
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

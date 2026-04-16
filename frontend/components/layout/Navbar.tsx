@@ -11,7 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
-import CartDrawer from '@/components/cart/CartDrawer';
+import dynamic from 'next/dynamic';
+const CartDrawer = dynamic(() => import('@/components/cart/CartDrawer'), { ssr: false });
+
 import CategoryBar from '@/components/layout/CategoryBar';
 import {
   DropdownMenu,
