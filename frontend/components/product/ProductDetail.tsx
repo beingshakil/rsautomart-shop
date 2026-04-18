@@ -106,7 +106,8 @@ export default function ProductDetail({ slug }: { slug: string }) {
                 fill
                 className="object-contain p-6 opacity-0 transition-opacity duration-500"
                 priority
-                onLoadingComplete={(img: HTMLImageElement) => {
+                onLoad={(e) => {
+                  const img = e.target as HTMLImageElement;
                   img.classList.remove('opacity-0');
                   img.parentElement?.classList.remove('animate-pulse');
                 }}

@@ -14,6 +14,8 @@ export default function Footer() {
             width={280}
             height={60}
             className="h-14 w-auto"
+            loading="eager"
+            priority
           />
           <p className="text-sm leading-relaxed text-gray-400">
             Bangladesh&apos;s trusted online shop for premium car & bike accessories. Quality products with affordable pricing and fast delivery.

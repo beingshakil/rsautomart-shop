@@ -62,7 +62,10 @@ export default function HeroBanner() {
                   priority={i === 0}
                   sizes="100vw"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-0 animate-in fade-in duration-500 fill-mode-forwards"
-                  onLoadingComplete={(img: HTMLImageElement) => img.classList.remove('opacity-0')}
+                  onLoad={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.classList.remove('opacity-0');
+                  }}
                 />
               </div>
               {/* Overlay Gradient */}
