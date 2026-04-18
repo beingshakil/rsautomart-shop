@@ -57,8 +57,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setVariants(product.variants || []);
         setSpecs(product.specifications || []);
       }
-    }).catch(() => {
-      toast.error('Failed to load product details');
+    }).catch((error: any) => {
+      const message = error.response?.data?.message || 'Failed to load product details';
+      toast.error(message);
+      console.error('Error loading product:', error);
     }).finally(() => setLoading(false));
   }, [id]);
 
