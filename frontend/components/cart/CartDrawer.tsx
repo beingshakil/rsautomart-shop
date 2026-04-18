@@ -38,10 +38,12 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
         ) : (
           <>
             <div className="flex-1 overflow-y-auto scrollbar-custom space-y-4 py-4 px-6">
-              {items.map((item) => (
+              {items.map((item) => {
+                if (!item.product) return null;
+                return (
                 <div key={item.product._id + (item.variant || '')} className="flex gap-3">
                   <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                    {item.product.images?.[0]?.url && (
+                    {item.product?.images?.[0]?.url && (
                       <Image
                         src={item.product.images[0].url}
                         alt={item.product.name}
@@ -91,7 +93,8 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="py-4 space-y-3 px-6 pb-6 border-t border-gray-100 bg-gray-50/50">

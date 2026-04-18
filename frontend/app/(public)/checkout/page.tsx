@@ -74,14 +74,16 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      const orderItems = items.map((item) => ({
-        product: item.product._id,
-        name: item.product.name,
-        image: item.product.images?.[0]?.url || '',
-        price: item.price,
-        quantity: item.quantity,
-        variant: item.variant,
-      }));
+      const orderItems = items
+        .filter((item) => item.product)
+        .map((item) => ({
+          product: item.product._id,
+          name: item.product.name,
+          image: item.product?.images?.[0]?.url || '',
+          price: item.price,
+          quantity: item.quantity,
+          variant: item.variant,
+        }));
 
       const { data } = await api.post('/orders', {
         shippingAddress: { ...form, phone: `+880${form.phone}` },
@@ -239,12 +241,15 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
 
               <div className="space-y-3 mb-6 border-b border-gray-100 pb-4">
-                {items.map((item) => (
+                {items.map((item) => {
+                  if (!item.product) return null;
+                  return (
                   <div key={item.product._id} className="flex justify-between items-start text-sm text-gray-700">
                     <span className="pr-4">{item.product.name} x{item.quantity}</span>
                     <span className="font-medium whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               {totalAmount < 999 ? (

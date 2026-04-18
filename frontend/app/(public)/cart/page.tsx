@@ -146,10 +146,12 @@ export default function CartPage() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {items.map((item) => (
+          {items.map((item) => {
+            if (!item.product) return null;
+            return (
             <div key={item.product._id + (item.variant || '')} className="flex gap-4 border rounded-lg p-4">
               <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                {item.product.images?.[0]?.url && (
+                {item.product?.images?.[0]?.url && (
                   <Image src={item.product.images[0].url} alt={item.product.name} width={96} height={96} className="w-full h-full object-cover" />
                 )}
               </div>
@@ -178,7 +180,8 @@ export default function CartPage() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
 
           <div className="flex justify-between items-center pt-4">
             <Link href="/shop" className="text-brand-red hover:underline flex items-center gap-1">

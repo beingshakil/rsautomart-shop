@@ -13,6 +13,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
+  if (!product) return null;
   const { addToCart } = useCart();
   const { addItem, removeItem, isInWishlist } = useWishlistStore();
   const isWished = isInWishlist(product._id);

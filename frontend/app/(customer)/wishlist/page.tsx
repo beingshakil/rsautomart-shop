@@ -29,7 +29,9 @@ export default function WishlistPage() {
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-6">My Wishlist ({items.length} items)</h1>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
+        {items.map((item) => {
+          if (!item) return null;
+          return (
           <div key={item._id} className="border rounded-lg overflow-hidden bg-white">
             <Link href={`/product/${item.slug}`} className="block aspect-square relative bg-gray-100">
               {item.images?.[0]?.url && (
@@ -61,7 +63,8 @@ export default function WishlistPage() {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

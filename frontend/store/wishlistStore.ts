@@ -32,7 +32,7 @@ export const useWishlistStore = create<WishlistStore>()(
         set((state) => ({ items: state.items.filter((i) => i._id !== id) })),
       isInWishlist: (id) => get().items.some((i) => i._id === id),
       clearWishlist: () => set({ items: [] }),
-      setWishlist: (items) => set({ items }),
+      setWishlist: (items) => set({ items: items.filter((i) => i) }),
     }),
     { name: 'wishlist-storage' }
   )

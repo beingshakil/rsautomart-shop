@@ -63,7 +63,11 @@ export const useCartStore = create<CartStore>()(
           return { items: newItems, totalAmount };
         }),
       clearCart: () => set({ items: [], totalAmount: 0 }),
-      setCart: (items, totalAmount) => set({ items, totalAmount }),
+      setCart: (items, totalAmount) => {
+        const validItems = items.filter((i) => i.product);
+        const newTotal = validItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+        set({ items: validItems, totalAmount: newTotal });
+      },
       getItemCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
     }),
     { name: 'cart-storage' }
