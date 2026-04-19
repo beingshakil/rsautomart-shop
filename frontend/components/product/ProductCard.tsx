@@ -40,7 +40,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
       {/* Image */}
       <div className="relative bg-gray-100 overflow-hidden aspect-square animate-pulse group-hover:animate-none">
-        <Link href={`/product/${product.slug}`} className="block w-full h-full">
+        <Link href={`/product/${product.slug}`} className="block w-full h-full relative">
           {product.images?.[0]?.url ? (
             <Image
               src={product.images[0].url}

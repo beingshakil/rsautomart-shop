@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/hooks/useCart';
+import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -17,7 +17,9 @@ const inputCls =
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, totalAmount, clearCart } = useCart();
+  const items = useCartStore((s) => s.items);
+  const totalAmount = useCartStore((s) => s.totalAmount);
+  const clearCart = useCartStore((s) => s.clearCart);
   const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('COD');
@@ -32,6 +34,16 @@ export default function CheckoutPage() {
     division: 'Dhaka',
   });
   const [deliveryNote, setDeliveryNote] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setForm(prev => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        phone: prev.phone || user.phone?.replace(/^\+?880/, '') || '',
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -63,7 +75,7 @@ export default function CheckoutPage() {
   // Free shipping over 999, else 70/120
   const shippingCost = totalAmount >= 999 ? 0 : isDhaka ? 70 : 120;
   const couponDiscount = coupon?.discount || 0;
-  const grandTotal = totalAmount + shippingCost - couponDiscount;
+  const grandTotal = Math.max(0, totalAmount + shippingCost - couponDiscount);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,6 +126,18 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleWhatsAppOrder = () => {
+    const orderDetails = items
+      .filter((item) => item.product)
+      .map((item) => `- ${item.product.name}${item.variant ? ` (${item.variant})` : ''} x ${item.quantity}: ${formatPrice(item.price * item.quantity)}`)
+      .join('%0A');
+
+    const address = `Name: ${form.name}%0APhone: +880${form.phone}%0AAddress: ${form.address}, ${form.area}, ${form.district}, ${form.division}`;
+    const message = `*NEW ORDER FROM WEBSITE*%0A%0A*Items:*%0A${orderDetails}%0A%0A*Summary:*%0ASubtotal: ${formatPrice(totalAmount)}%0AShipping: ${formatPrice(shippingCost)}%0ADiscount: ${formatPrice(couponDiscount)}%0A*Total: ${formatPrice(grandTotal)}*%0A%0A*Shipping Details:*%0A${address}${deliveryNote ? `%0A%0A*Note:* ${deliveryNote}` : ''}`;
+
+    window.open(`https://wa.me/8801919242866?text=${message}`, '_blank');
   };
 
   return (
@@ -203,13 +227,15 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 {[
                   { value: 'COD', label: 'Cash on Delivery', desc: 'Pay when you receive your order' },
-                  { value: 'SSLCommerz', label: 'Online Payment (SSLCommerz)', desc: 'Visa, Mastercard, bKash, Nagad, and more' },
+                  { value: 'WhatsApp', label: 'Order via WhatsApp', desc: 'Share your order details on WhatsApp' },
+                  { value: 'SSLCommerz', label: 'Online Payment (SSLCommerz)', desc: 'Online payment is currently unavailable', disabled: true },
                 ].map((m) => {
                   const active = paymentMethod === m.value;
                   return (
                     <label
                       key={m.value}
                       className={`relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition-colors ${
+                        m.disabled ? 'opacity-50 cursor-not-allowed grayscale-[0.5]' :
                         active ? 'border-red-500 ring-1 ring-red-500 bg-red-50/30' : 'border-gray-200 hover:bg-gray-50'
                       }`}
                     >
@@ -218,7 +244,8 @@ export default function CheckoutPage() {
                         name="payment"
                         value={m.value}
                         checked={active}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        disabled={m.disabled}
+                        onChange={(e) => !m.disabled && setPaymentMethod(e.target.value)}
                         className="sr-only"
                       />
                       <span className={`mt-1 flex h-4 w-4 items-center justify-center rounded-full border ${active ? 'border-red-500 bg-red-600' : 'border-gray-300 bg-white'}`}>
@@ -244,8 +271,8 @@ export default function CheckoutPage() {
                 {items.map((item) => {
                   if (!item.product) return null;
                   return (
-                  <div key={item.product._id} className="flex justify-between items-start text-sm text-gray-700">
-                    <span className="pr-4">{item.product.name} x{item.quantity}</span>
+                  <div key={item.product._id + (item.variant || '')} className="flex justify-between items-start text-sm text-gray-700">
+                    <span className="pr-4">{item.product.name} {item.variant ? `(${item.variant})` : ''} x{item.quantity}</span>
                     <span className="font-medium whitespace-nowrap">{formatPrice(item.price * item.quantity)}</span>
                   </div>
                   );
@@ -288,13 +315,26 @@ export default function CheckoutPage() {
                 <span className="text-2xl font-bold text-red-600">{formatPrice(grandTotal)}</span>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 transition duration-200 shadow-md disabled:opacity-60"
-              >
-                {loading ? 'Placing Order...' : 'Place Order'}
-              </button>
+              {paymentMethod === 'WhatsApp' ? (
+                <button
+                  type="button"
+                  onClick={handleWhatsAppOrder}
+                  className="w-full bg-green-600 text-white font-bold py-3.5 px-4 rounded-lg hover:bg-green-700 transition duration-200 shadow-md flex items-center justify-center gap-2"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                  Confirm via WhatsApp
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-red-600 text-white font-bold py-3.5 px-4 rounded-lg hover:bg-red-700 transition duration-200 shadow-md disabled:opacity-60"
+                >
+                  {loading ? 'Placing Order...' : 'Place Order'}
+                </button>
+              )}
             </div>
           </div>
         </form>
