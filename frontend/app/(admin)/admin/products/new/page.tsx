@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import api from '@/lib/api';
+import RichTextEditor from '@/components/ui/RichTextEditor';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -90,11 +91,20 @@ export default function NewProductPage() {
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Short Description</Label>
-              <Input value={form.shortDescription} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} placeholder="Brief product summary" />
+              <RichTextEditor
+                value={form.shortDescription}
+                onChange={(html) => setForm({ ...form, shortDescription: html })}
+                placeholder="Brief product summary (shown on product page above fold)..."
+                minHeight="100px"
+              />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Full Description <span className="text-red-500">*</span></Label>
-              <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Detailed product description..." required />
+              <RichTextEditor
+                value={form.description}
+                onChange={(html) => setForm({ ...form, description: html })}
+                placeholder="Detailed product description with paragraphs, bullet points, headings..."
+              />
             </div>
             <div className="grid sm:grid-cols-2 gap-5 pt-2 border-t border-gray-100">
               <div className="space-y-1.5">

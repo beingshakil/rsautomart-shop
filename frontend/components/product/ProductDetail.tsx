@@ -244,7 +244,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
 
           {/* Short Description */}
           {product.shortDescription && (
-            <p className="text-gray-600 mb-4">{product.shortDescription}</p>
+            <div className="product-description mb-4" dangerouslySetInnerHTML={{ __html: product.shortDescription }} />
           )}
           {product.warranty && (
             <p className="text-sm text-green-600 font-medium">{product.warranty}</p>
@@ -259,8 +259,8 @@ export default function ProductDetail({ slug }: { slug: string }) {
           <TabsTrigger value="specifications">Specifications</TabsTrigger>
           <TabsTrigger value="reviews">Reviews ({reviews.length})</TabsTrigger>
         </TabsList>
-        <TabsContent value="description" className="mt-4 prose max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: product.description }} />
+        <TabsContent value="description" className="mt-4">
+          <div className="product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
         </TabsContent>
         <TabsContent value="specifications" className="mt-4">
           {product.specifications?.length > 0 ? (

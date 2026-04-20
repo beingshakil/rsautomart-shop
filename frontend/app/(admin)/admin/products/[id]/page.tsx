@@ -7,12 +7,12 @@ import { X, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import api from '@/lib/api';
+import RichTextEditor from '@/components/ui/RichTextEditor';
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -36,6 +36,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       if (product) {
         setForm({
           name: product.name,
+          slug: product.slug || '',
           description: product.description,
           shortDescription: product.shortDescription || '',
           price: String(product.price),
@@ -105,6 +106,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 <Input value={form.name || ''} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-gray-700">Slug</Label>
+                <Input value={form.slug || ''} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="product-url-slug" />
+              </div>
+              <div className="space-y-1.5">
                 <Label className="text-sm font-semibold text-gray-700">SKU</Label>
                 <Input value={form.sku || ''} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
               </div>
@@ -122,11 +127,20 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Short Description</Label>
-              <Input value={form.shortDescription || ''} onChange={(e) => setForm({ ...form, shortDescription: e.target.value })} />
+              <RichTextEditor
+                value={form.shortDescription || ''}
+                onChange={(html) => setForm({ ...form, shortDescription: html })}
+                placeholder="Brief product summary (shown on product page above fold)..."
+                minHeight="100px"
+              />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold text-gray-700">Full Description</Label>
-              <Textarea rows={5} value={form.description || ''} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+              <RichTextEditor
+                value={form.description || ''}
+                onChange={(html) => setForm({ ...form, description: html })}
+                placeholder="Detailed product description with paragraphs, bullet points, headings..."
+              />
             </div>
             <div className="grid sm:grid-cols-2 gap-5 pt-2 border-t border-gray-100">
               <div className="space-y-1.5">
@@ -220,6 +234,40 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </CardContent>
         </Card>
 
+
+        <Card>
+          <CardHeader><CardTitle>Variants</CardTitle></CardHeader>
+          <CardContent>
+            {variants.map((v, i) => (
+              <div key={i} className="grid grid-cols-5 gap-2 mb-2">
+                <Input placeholder="Type (color/size)" value={v.type || ''} onChange={(e) => { const nv = [...variants]; nv[i] = { ...nv[i], type: e.target.value }; setVariants(nv); }} />
+                <Input placeholder="Value" value={v.value || ''} onChange={(e) => { const nv = [...variants]; nv[i] = { ...nv[i], value: e.target.value }; setVariants(nv); }} />
+                <Input placeholder="Price" type="number" value={v.price || ''} onChange={(e) => { const nv = [...variants]; nv[i] = { ...nv[i], price: e.target.value }; setVariants(nv); }} />
+                <Input placeholder="Stock" type="number" value={v.stock || ''} onChange={(e) => { const nv = [...variants]; nv[i] = { ...nv[i], stock: e.target.value }; setVariants(nv); }} />
+                <Button type="button" variant="outline" size="sm" onClick={() => setVariants(variants.filter((_, j) => j !== i))}>Remove</Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => setVariants([...variants, { type: '', value: '', price: '', stock: '' }])}>
+              + Add Variant
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Specifications</CardTitle></CardHeader>
+          <CardContent>
+            {specs.map((s, i) => (
+              <div key={i} className="grid grid-cols-3 gap-2 mb-2">
+                <Input placeholder="Key (e.g. Material)" value={s.key || ''} onChange={(e) => { const ns = [...specs]; ns[i] = { ...ns[i], key: e.target.value }; setSpecs(ns); }} />
+                <Input placeholder="Value (e.g. Plastic)" value={s.value || ''} onChange={(e) => { const ns = [...specs]; ns[i] = { ...ns[i], value: e.target.value }; setSpecs(ns); }} />
+                <Button type="button" variant="outline" size="sm" onClick={() => setSpecs(specs.filter((_, j) => j !== i))}>Remove</Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => setSpecs([...specs, { key: '', value: '' }])}>
+              + Add Specification
+            </Button>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader><CardTitle>Settings</CardTitle></CardHeader>

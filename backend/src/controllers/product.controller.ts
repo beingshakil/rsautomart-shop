@@ -225,7 +225,11 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     const body = req.body;
     const updateData: any = { ...body };
 
-    if (body.name) {
+    if (body.slug) {
+      // Use explicit slug provided by admin (slugified to ensure clean format)
+      updateData.slug = slugify(body.slug, { lower: true, strict: true });
+    } else if (body.name) {
+      // Auto-generate slug from name only when no explicit slug provided
       updateData.slug = slugify(body.name, { lower: true, strict: true });
     }
     if (body.variants) updateData.variants = JSON.parse(body.variants);
