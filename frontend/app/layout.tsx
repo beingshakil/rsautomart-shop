@@ -51,6 +51,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://placehold.co" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-T96H39V3P2" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`

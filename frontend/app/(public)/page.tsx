@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import HeroBanner from '@/components/home/HeroBanner';
-import FeaturedCategories from '@/components/home/FeaturedCategories';
-import BestSellers from '@/components/home/BestSellers';
-import NewArrivals from '@/components/home/NewArrivals';
-import FlashSale from '@/components/home/FlashSale';
-import TrustBadges from '@/components/home/TrustBadges';
+const FeaturedCategories = dynamic(() => import('@/components/home/FeaturedCategories'));
+const BestSellers = dynamic(() => import('@/components/home/BestSellers'));
+const NewArrivals = dynamic(() => import('@/components/home/NewArrivals'));
+const FlashSale = dynamic(() => import('@/components/home/FlashSale'));
+const TrustBadges = dynamic(() => import('@/components/home/TrustBadges'));
 
 async function getHomeData() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';

@@ -61,7 +61,8 @@ export default function HeroBanner() {
                   alt={banner.title}
                   fill
                   priority={i === 0}
-                  sizes="100vw"
+                  fetchPriority={i === 0 ? "high" : undefined}
+                  sizes="(max-width: 1400px) 100vw, 1400px"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
               </div>
@@ -95,12 +96,14 @@ export default function HeroBanner() {
         <button
           onClick={() => setCurrent((c) => (c - 1 + banners.length) % banners.length)}
           className="absolute top-1/2 left-3 -translate-y-1/2 w-11 h-11 bg-white/80 hover:bg-brand-red text-brand-black hover:text-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 backdrop-blur-sm md:opacity-70 md:group-hover:opacity-100"
+          aria-label="Previous Slide"
         >
           <ChevronLeft size={18} />
         </button>
         <button
           onClick={() => setCurrent((c) => (c + 1) % banners.length)}
           className="absolute top-1/2 right-3 -translate-y-1/2 w-11 h-11 bg-white/80 hover:bg-brand-red text-brand-black hover:text-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 backdrop-blur-sm md:opacity-70 md:group-hover:opacity-100"
+          aria-label="Next Slide"
         >
           <ChevronRight size={18} />
         </button>
@@ -111,7 +114,8 @@ export default function HeroBanner() {
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`h-3 rounded-full transition-all duration-300 hover:scale-125 ${
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-3 rounded-full transition-[width,transform,background-color] duration-300 hover:scale-125 ${
                 i === current ? 'w-7 bg-white' : 'w-3 bg-white/50 hover:bg-white'
               }`}
             />

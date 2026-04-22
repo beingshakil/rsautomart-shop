@@ -63,6 +63,7 @@ export default function Navbar({ initialCategories, logo }: { initialCategories?
           <button
             className="lg:hidden p-2 order-first"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close Menu" : "Open Menu"}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -80,7 +81,7 @@ export default function Navbar({ initialCategories, logo }: { initialCategories?
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-4 py-2.5 text-sm outline-none bg-white placeholder-gray-400"
               />
-              <button type="submit" className="bg-brand-black hover:bg-brand-red transition-colors px-5 flex items-center justify-center">
+              <button type="submit" className="bg-brand-black hover:bg-brand-red transition-colors px-5 flex items-center justify-center" aria-label="Search">
                 <Search size={16} className="text-white" />
               </button>
             </div>
@@ -89,7 +90,7 @@ export default function Navbar({ initialCategories, logo }: { initialCategories?
           {/* Right Icons */}
           <div className="order-2 lg:order-3 flex items-center gap-3 md:gap-5 flex-shrink-0">
             {/* Wishlist */}
-            <Link href="/wishlist" className="hidden md:flex flex-col items-center text-gray-600 hover:text-brand-red transition-colors group">
+            <Link href="/wishlist" className="hidden md:flex flex-col items-center text-gray-600 hover:text-brand-red transition-colors group" aria-label={`Wishlist with ${wishlistItems.length} items`}>
               <span className="relative">
                 <Heart size={20} className="group-hover:scale-110 transition-transform" />
                 {wishlistItems.length > 0 && (
@@ -102,7 +103,7 @@ export default function Navbar({ initialCategories, logo }: { initialCategories?
             </Link>
 
             {/* Cart */}
-            <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center text-gray-600 hover:text-brand-red transition-colors group">
+            <button onClick={() => setCartOpen(true)} className="relative flex flex-col items-center text-gray-600 hover:text-brand-red transition-colors group" aria-label={`Open Cart with ${itemCount} items`}>
               <span className="relative">
                 <ShoppingCart size={20} className="group-hover:scale-110 transition-transform" />
                 {itemCount > 0 && (

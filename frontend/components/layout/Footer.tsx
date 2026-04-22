@@ -34,7 +34,7 @@ export default function Footer() {
               { href: '/offers', label: 'Offers & Deals' },
             ].map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-gray-500 hover:text-brand-red transition-colors">
+                <Link href={link.href} className="text-sm text-gray-400 hover:text-brand-red transition-colors">
                   {link.label}
                 </Link>
               </li>
@@ -46,8 +46,8 @@ export default function Footer() {
         <div>
           <h4 className="text-base font-bold uppercase text-white mb-5">Information</h4>
           <ul className="space-y-2.5">
-            <li className="text-sm text-gray-500">Inside Dhaka: 70 ৳</li>
-            <li className="text-sm text-gray-500">Outside Dhaka: 120 ৳</li>
+            <li className="text-sm text-gray-400">Inside Dhaka: 70 ৳</li>
+            <li className="text-sm text-gray-400">Outside Dhaka: 120 ৳</li>
             <li className="text-sm text-brand-red font-semibold">FREE Delivery Over ৳999</li>
           </ul>
         </div>
@@ -55,7 +55,7 @@ export default function Footer() {
         {/* Column 4: Contact */}
         <div>
           <h4 className="text-base font-bold uppercase text-white mb-5">Contact</h4>
-          <ul className="space-y-3 text-sm text-gray-500">
+          <ul className="space-y-3 text-sm text-gray-400">
             <li>
               <span className="text-gray-300 font-medium">Address:</span> North Chashara, Link Rd, Dhaka, Bangladesh
             </li>
@@ -80,6 +80,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-brand-red transition-colors"
+                aria-label={`Follow us on ${label}`}
                 title={label}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d={svg} /></svg>

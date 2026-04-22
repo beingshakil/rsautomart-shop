@@ -70,6 +70,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             href={`/product/${product.slug}`}
             className="w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-brand-red hover:bg-gray-50 transition-colors"
             title="Quick View"
+            aria-label="Quick View"
           >
             <Eye size={14} />
           </Link>

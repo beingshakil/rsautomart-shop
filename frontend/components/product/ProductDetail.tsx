@@ -138,6 +138,7 @@ export default function ProductDetail({
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
+                  aria-label={`View product image ${i + 1}`}
                   className={`w-20 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 ${
                     i === selectedImage ? 'border-brand-red' : 'border-gray-200'
                   }`}
@@ -214,6 +215,7 @@ export default function ProductDetail({
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
+                aria-label="Decrease quantity"
               >
                 <Minus size={14} />
               </button>
@@ -221,6 +223,7 @@ export default function ProductDetail({
               <button
                 onClick={() => setQuantity(quantity + 1)}
                 className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
+                aria-label="Increase quantity"
               >
                 <Plus size={14} />
               </button>
@@ -250,6 +253,7 @@ export default function ProductDetail({
               variant="outline"
               size="icon"
               className="shrink-0"
+              aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
               onClick={() => isWished ? removeItem(product._id) : addItem({
                 _id: product._id, name: product.name, slug: product.slug,
                 price: product.price, discountPrice: product.discountPrice, images: product.images,
