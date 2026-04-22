@@ -8,6 +8,7 @@ import SectionHeader from '@/components/product/SectionHeader';
 import api from '@/lib/api';
 
 import { Car, Bike, Cpu, Wrench, Sparkles, Lightbulb } from 'lucide-react';
+import { optimizeCloudinaryUrl } from '@/lib/utils';
 
 const iconMap: Record<string, any> = {
   'car-accessories': Car,
@@ -18,11 +19,14 @@ const iconMap: Record<string, any> = {
   'lighting': Lightbulb,
 };
 
-export default function FeaturedCategories() {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function FeaturedCategories({ initialCategories }: { initialCategories?: any[] }) {
+  const [categories, setCategories] = useState<any[]>(initialCategories || []);
+  const [loading, setLoading] = useState(!initialCategories);
 
   useEffect(() => {
+    if (initialCategories && categories.length > 0) return;
+    
+    setLoading(true);
     api.get('/categories')
       .then(({ data }) => setCategories(data.categories))
       .catch(() => setCategories([]))
@@ -54,14 +58,13 @@ export default function FeaturedCategories() {
                   <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-[3px] border-gray-200 group-hover:border-brand-red transition-colors duration-300 bg-gray-50 flex items-center justify-center">
                     {cat.image?.url ? (
                       <Image
-                        src={cat.image.url}
+                        src={optimizeCloudinaryUrl(cat.image.url, 200)}
                         alt={cat.name}
                         width={144}
                         height={144}
                         priority={idx < 4}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
                       />
-
                     ) : (
                       <Icon size={44} className="text-gray-400 group-hover:text-brand-red transition-colors duration-300" />
                     )}

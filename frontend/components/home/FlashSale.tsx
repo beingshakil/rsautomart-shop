@@ -6,12 +6,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Zap } from 'lucide-react';
 import api from '@/lib/api';
 
-export default function FlashSale() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function FlashSale({ initialData }: { initialData?: any }) {
+  const [data, setData] = useState<any>(initialData || null);
+  const [loading, setLoading] = useState(!initialData);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
+    if (initialData) return;
+    
     api.get('/flash-sale')
       .then(({ data }) => setData(data.flashSale))
       .catch(() => {})

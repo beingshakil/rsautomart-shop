@@ -49,6 +49,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-T96H39V3P2" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`

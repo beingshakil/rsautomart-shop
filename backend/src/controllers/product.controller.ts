@@ -202,6 +202,9 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
     const variants = body.variants ? JSON.parse(body.variants) : [];
     const specifications = body.specifications ? JSON.parse(body.specifications) : [];
     const tags = body.tags ? JSON.parse(body.tags) : [];
+    const mainSpecifications = Array.isArray(body.mainSpecifications) 
+      ? body.mainSpecifications[body.mainSpecifications.length - 1] 
+      : (body.mainSpecifications || '');
 
     const product = await Product.create({
       ...body,
@@ -211,6 +214,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
       variants,
       specifications,
       tags,
+      mainSpecifications,
       stock: { quantity: body.stockQuantity || 0 },
     });
 
@@ -235,6 +239,11 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     if (body.variants) updateData.variants = JSON.parse(body.variants);
     if (body.specifications) updateData.specifications = JSON.parse(body.specifications);
     if (body.tags) updateData.tags = JSON.parse(body.tags);
+    if (body.mainSpecifications !== undefined) {
+      updateData.mainSpecifications = Array.isArray(body.mainSpecifications)
+        ? body.mainSpecifications[body.mainSpecifications.length - 1]
+        : body.mainSpecifications;
+    }
     if (body.stockQuantity !== undefined) {
       updateData.stock = { quantity: Number(body.stockQuantity) };
     }

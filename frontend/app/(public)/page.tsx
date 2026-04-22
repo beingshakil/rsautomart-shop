@@ -1,12 +1,41 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import HeroBanner from '@/components/home/HeroBanner';
 import FeaturedCategories from '@/components/home/FeaturedCategories';
+import BestSellers from '@/components/home/BestSellers';
+import NewArrivals from '@/components/home/NewArrivals';
+import FlashSale from '@/components/home/FlashSale';
+import TrustBadges from '@/components/home/TrustBadges';
 
-const FlashSale = dynamic(() => import('@/components/home/FlashSale'), { ssr: true });
-const BestSellers = dynamic(() => import('@/components/home/BestSellers'), { ssr: true });
-const NewArrivals = dynamic(() => import('@/components/home/NewArrivals'), { ssr: true });
-const TrustBadges = dynamic(() => import('@/components/home/TrustBadges'), { ssr: true });
+async function getHomeData() {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  
+  const endpoints = [
+    `${API_URL}/api/categories`,
+    `${API_URL}/api/products/best-sellers`,
+    `${API_URL}/api/products/new-arrivals`,
+    `${API_URL}/api/flash-sale`,
+  ];
+
+  try {
+    const responses = await Promise.all(
+      endpoints.map(url => fetch(url, { next: { revalidate: 60 } })) // Cache Flash Sale shorter (1 min)
+    );
+    
+    const [categoriesData, bestSellersData, newArrivalsData, flashSaleData] = await Promise.all(
+      responses.map(res => res.ok ? res.json() : { products: [], categories: [], flashSale: null })
+    );
+
+    return {
+      categories: categoriesData.categories || [],
+      bestSellers: bestSellersData.products || [],
+      newArrivals: newArrivalsData.products || [],
+      flashSale: flashSaleData.flashSale || null,
+    };
+  } catch (error) {
+    console.error('Error fetching home data:', error);
+    return { categories: [], bestSellers: [], newArrivals: [], flashSale: null };
+  }
+}
 
 export const metadata: Metadata = {
   title: 'Car Accessories Online in Bangladesh - Interior Car Lights & Cleaner',
@@ -49,17 +78,19 @@ const orgJsonLd = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { categories, bestSellers, newArrivals, flashSale } = await getHomeData();
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       <h1 className="sr-only">Car Accessories Online - Best Car Accessories Shop in Bangladesh</h1>
       <HeroBanner />
-      <FeaturedCategories />
-      <FlashSale />
-      <BestSellers />
-      <NewArrivals />
+      <FeaturedCategories initialCategories={categories} />
+      <FlashSale initialData={flashSale} />
+      <BestSellers initialProducts={bestSellers} />
+      <NewArrivals initialProducts={newArrivals} />
       <TrustBadges />
     </>
   );

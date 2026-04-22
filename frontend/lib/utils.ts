@@ -35,3 +35,18 @@ export function getStockStatusText(status: string, quantity?: number): string {
     default: return '';
   }
 }
+
+/**
+ * Optimizes Cloudinary URLs by injecting transformation parameters.
+ * Default: auto-format, auto-quality, and specific width.
+ */
+export function optimizeCloudinaryUrl(url: string, width: number = 800): string {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  
+  // Only apply if not already transformed
+  if (url.includes('/upload/')) {
+    return url.replace('/upload/', `/upload/f_auto,q_auto,w_${width}/`);
+  }
+  
+  return url;
+}

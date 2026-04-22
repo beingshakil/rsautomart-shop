@@ -47,11 +47,18 @@ export function useFeaturedProducts() {
   return { products, loading };
 }
 
-export function useBestSellers(sort?: string) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useBestSellers(sort?: string, initialData?: any[]) {
+  const [products, setProducts] = useState<any[]>(initialData || []);
+  const [loading, setLoading] = useState(!initialData);
 
   useEffect(() => {
+    // Skip fetching if we already have initialData and sort hasn't changed from default
+    if (initialData && (!sort || sort === 'popular') && products.length > 0) {
+      setLoading(false);
+      return;
+    }
+    
+    setLoading(true);
     api.get(`/products/best-sellers${sort ? `?sort=${sort}` : ''}`)
       .then(({ data }) => setProducts(data.products))
       .catch(() => setProducts([]))
@@ -61,11 +68,18 @@ export function useBestSellers(sort?: string) {
   return { products, loading };
 }
 
-export function useNewArrivals(sort?: string) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useNewArrivals(sort?: string, initialData?: any[]) {
+  const [products, setProducts] = useState<any[]>(initialData || []);
+  const [loading, setLoading] = useState(!initialData);
 
   useEffect(() => {
+    // Skip fetching if we already have initialData and sort hasn't changed from default
+    if (initialData && (!sort || sort === 'newest') && products.length > 0) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     api.get(`/products/new-arrivals${sort ? `?sort=${sort}` : ''}`)
       .then(({ data }) => setProducts(data.products))
       .catch(() => setProducts([]))

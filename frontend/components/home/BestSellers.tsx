@@ -7,11 +7,11 @@ import SectionHeader from '@/components/product/SectionHeader';
 import SortDropdown from '@/components/product/SortDropdown';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function BestSellers() {
+export default function BestSellers({ initialProducts }: { initialProducts?: any[] }) {
   const [sort, setSort] = useState('popular');
-  const { products, loading } = useBestSellers(sort);
+  const { products, loading } = useBestSellers(sort, initialProducts);
 
-  if (!loading && products.length === 0) return null;
+  if (!loading && products.length === 0 && !initialProducts) return null;
 
   return (
     <section className="py-14 md:py-16">

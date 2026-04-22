@@ -143,6 +143,7 @@
 }
 .animate-marquee {
   animation: marquee 18s linear infinite;
+  will-change: transform;
 }
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }

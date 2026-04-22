@@ -6,14 +6,16 @@ import { ChevronRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import api from '@/lib/api';
 
-export default function CategoryBar() {
-  const [categories, setCategories] = useState<any[]>([]);
+export default function CategoryBar({ initialCategories }: { initialCategories?: any[] }) {
+  const [categories, setCategories] = useState<any[]>(initialCategories || []);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
+    if (initialCategories && categories.length > 0) return;
+
     api.get('/categories')
       .then(({ data }) => setCategories(data.categories))
       .catch(() => setCategories([]));

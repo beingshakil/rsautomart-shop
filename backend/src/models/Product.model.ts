@@ -25,6 +25,7 @@ export interface IProduct extends Document {
   }[];
   tags: string[];
   specifications: { key: string; value: string }[];
+  mainSpecifications?: string;
   isFeatured: boolean;
   isBestSeller: boolean;
   isNewArrival: boolean;
@@ -80,6 +81,7 @@ const productSchema = new Schema<IProduct>(
         value: { type: String },
       },
     ],
+    mainSpecifications: { type: String },
     isFeatured: { type: Boolean, default: false },
     isBestSeller: { type: Boolean, default: false },
     isNewArrival: { type: Boolean, default: false },
@@ -113,8 +115,12 @@ productSchema.pre('save', function () {
 
 productSchema.index({ name: 'text', tags: 'text', sku: 'text', description: 'text' });
 
-productSchema.index({ slug: 1 });
 productSchema.index({ category: 1 });
 productSchema.index({ price: 1 });
+productSchema.index({ isFeatured: 1, isActive: 1 });
+productSchema.index({ isBestSeller: 1, isActive: 1 });
+productSchema.index({ isNewArrival: 1, isActive: 1 });
+productSchema.index({ totalSold: -1 });
+productSchema.index({ createdAt: -1 });
 
 export default mongoose.model<IProduct>('Product', productSchema);

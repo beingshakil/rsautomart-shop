@@ -7,11 +7,11 @@ import SectionHeader from '@/components/product/SectionHeader';
 import SortDropdown from '@/components/product/SortDropdown';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function NewArrivals() {
+export default function NewArrivals({ initialProducts }: { initialProducts?: any[] }) {
   const [sort, setSort] = useState('newest');
-  const { products, loading } = useNewArrivals(sort);
+  const { products, loading } = useNewArrivals(sort, initialProducts);
 
-  if (!loading && products.length === 0) return null;
+  if (!loading && products.length === 0 && !initialProducts) return null;
 
   return (
     <section className="bg-gray-50 py-14 md:py-16">

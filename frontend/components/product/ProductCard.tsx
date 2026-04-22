@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useWishlistStore } from '@/store/wishlistStore';
-import { formatPrice, getDiscountPercent } from '@/lib/utils';
+import { formatPrice, getDiscountPercent, optimizeCloudinaryUrl } from '@/lib/utils';
 
 interface ProductCardProps {
   product: any;
@@ -39,22 +39,16 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   return (
     <div className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group flex flex-col h-full">
       {/* Image */}
-      <div className="relative bg-gray-100 overflow-hidden aspect-square animate-pulse group-hover:animate-none">
+      <div className="relative bg-gray-50 overflow-hidden aspect-square group-hover:animate-none">
         <Link href={`/product/${product.slug}`} className="block w-full h-full relative">
           {product.images?.[0]?.url ? (
             <Image
-              src={product.images[0].url}
+              src={optimizeCloudinaryUrl(product.images[0].url, 600)}
               alt={product.name}
               fill
               priority={priority}
               sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
-              className="object-contain p-3 group-hover:scale-105 transition-transform duration-500 opacity-0"
-              onLoad={(e) => {
-                const img = e.target as HTMLImageElement;
-                img.classList.remove('opacity-0');
-                const parent = img.parentElement?.parentElement;
-                if (parent) parent.classList.remove('animate-pulse');
-              }}
+              className="object-contain p-3 group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm bg-gray-50">

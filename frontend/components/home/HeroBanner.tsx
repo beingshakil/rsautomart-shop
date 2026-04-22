@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { optimizeCloudinaryUrl } from '@/lib/utils';
 
 const banners = [
   {
@@ -56,16 +57,12 @@ export default function HeroBanner() {
               {/* Background Image */}
               <div className="absolute inset-0 overflow-hidden bg-brand-black">
                 <Image
-                  src={banner.img}
+                  src={optimizeCloudinaryUrl(banner.img, 1400)}
                   alt={banner.title}
                   fill
                   priority={i === 0}
                   sizes="100vw"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-0 animate-in fade-in duration-500 fill-mode-forwards"
-                  onLoad={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.classList.remove('opacity-0');
-                  }}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
               </div>
               {/* Overlay Gradient */}

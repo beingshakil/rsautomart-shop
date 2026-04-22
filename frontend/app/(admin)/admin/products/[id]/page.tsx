@@ -23,7 +23,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [images, setImages] = useState<File[]>([]);
   const [form, setForm] = useState<any>({});
   const [variants, setVariants] = useState<any[]>([]);
-  const [specs, setSpecs] = useState<any[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -53,10 +52,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           isActive: product.isActive,
           metaTitle: product.metaTitle || '',
           metaDescription: product.metaDescription || '',
+          mainSpecifications: product.mainSpecifications || '',
           existingImages: product.images || [],
         });
         setVariants(product.variants || []);
-        setSpecs(product.specifications || []);
       }
     }).catch((error: any) => {
       const message = error.response?.data?.message || 'Failed to load product details';
@@ -77,7 +76,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         else formData.append(key, val as string);
       });
       if (variants.length > 0) formData.append('variants', JSON.stringify(variants));
-      if (specs.length > 0) formData.append('specifications', JSON.stringify(specs));
       if (form.tags) formData.append('tags', JSON.stringify(form.tags.split(',').map((t: string) => t.trim())));
       images.forEach((img) => formData.append('images', img));
 
@@ -140,6 +138,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 value={form.description || ''}
                 onChange={(html) => setForm({ ...form, description: html })}
                 placeholder="Detailed product description with paragraphs, bullet points, headings..."
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-semibold text-gray-700">Specifications</Label>
+              <RichTextEditor
+                value={form.mainSpecifications || ''}
+                onChange={(html) => setForm({ ...form, mainSpecifications: html })}
+                placeholder="Product specifications, features, and technical details..."
+                minHeight="140px"
               />
             </div>
             <div className="grid sm:grid-cols-2 gap-5 pt-2 border-t border-gray-100">
@@ -249,22 +256,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             ))}
             <Button type="button" variant="outline" size="sm" onClick={() => setVariants([...variants, { type: '', value: '', price: '', stock: '' }])}>
               + Add Variant
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader><CardTitle>Specifications</CardTitle></CardHeader>
-          <CardContent>
-            {specs.map((s, i) => (
-              <div key={i} className="grid grid-cols-3 gap-2 mb-2">
-                <Input placeholder="Key (e.g. Material)" value={s.key || ''} onChange={(e) => { const ns = [...specs]; ns[i] = { ...ns[i], key: e.target.value }; setSpecs(ns); }} />
-                <Input placeholder="Value (e.g. Plastic)" value={s.value || ''} onChange={(e) => { const ns = [...specs]; ns[i] = { ...ns[i], value: e.target.value }; setSpecs(ns); }} />
-                <Button type="button" variant="outline" size="sm" onClick={() => setSpecs(specs.filter((_, j) => j !== i))}>Remove</Button>
-              </div>
-            ))}
-            <Button type="button" variant="outline" size="sm" onClick={() => setSpecs([...specs, { key: '', value: '' }])}>
-              + Add Specification
             </Button>
           </CardContent>
         </Card>

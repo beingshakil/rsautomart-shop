@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Minus, Plus, ShoppingCart, Zap, Heart, ChevronRight } from 'lucide-react';
@@ -15,18 +16,33 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { formatPrice, getDiscountPercent, getStockStatusColor, getStockStatusText } from '@/lib/utils';
 import api from '@/lib/api';
 
-export default function ProductDetail({ slug }: { slug: string }) {
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+import { optimizeCloudinaryUrl } from '@/lib/utils';
+
+export default function ProductDetail({ 
+  slug, 
+  initialProduct,
+  initialReviews = [],
+  initialRelated = []
+}: { 
+  slug: string, 
+  initialProduct?: any,
+  initialReviews?: any[],
+  initialRelated?: any[]
+}) {
+  const [product, setProduct] = useState<any>(initialProduct || null);
+  const [loading, setLoading] = useState(!initialProduct);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState('');
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState(initialProduct?.variants?.[0]?.value || '');
+  const [reviews, setReviews] = useState<any[]>(initialReviews);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>(initialRelated);
+  const router = useRouter();
   const { addToCart } = useCart();
   const { addItem, removeItem, isInWishlist } = useWishlistStore();
 
   useEffect(() => {
+    if (initialProduct) return;
+
     setLoading(true);
     api.get(`/products/${slug}`)
       .then(({ data }) => {
@@ -45,7 +61,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [slug]);
+  }, [slug, initialProduct]);
 
   if (loading) {
     return (
@@ -101,16 +117,11 @@ export default function ProductDetail({ slug }: { slug: string }) {
           <div className="aspect-square relative rounded-xl overflow-hidden bg-white mb-4 border border-gray-200">
             {product.images?.[selectedImage]?.url ? (
               <Image
-                src={product.images[selectedImage].url}
+                src={optimizeCloudinaryUrl(product.images[selectedImage].url, 800)}
                 alt={product.name}
                 fill
-                className="object-contain p-6 opacity-0 transition-opacity duration-500"
+                className="object-contain p-6 transition-opacity duration-500"
                 priority
-                onLoad={(e) => {
-                  const img = e.target as HTMLImageElement;
-                  img.classList.remove('opacity-0');
-                  img.parentElement?.classList.remove('animate-pulse');
-                }}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
@@ -131,7 +142,13 @@ export default function ProductDetail({ slug }: { slug: string }) {
                     i === selectedImage ? 'border-brand-red' : 'border-gray-200'
                   }`}
                 >
-                  <Image src={img.url} alt="" width={80} height={80} className="object-cover w-full h-full" />
+                  <Image 
+                    src={optimizeCloudinaryUrl(img.url, 200)} 
+                    alt="" 
+                    width={80} 
+                    height={80} 
+                    className="object-cover w-full h-full" 
+                  />
                 </button>
               ))}
             </div>
@@ -223,7 +240,7 @@ export default function ProductDetail({ slug }: { slug: string }) {
               className="text-sm px-6"
               onClick={() => {
                 addToCart(product, quantity, selectedVariant || undefined);
-                window.location.href = '/checkout';
+                router.push('/checkout');
               }}
               disabled={product.stock?.status === 'out_of_stock'}
             >
@@ -263,17 +280,8 @@ export default function ProductDetail({ slug }: { slug: string }) {
           <div className="product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
         </TabsContent>
         <TabsContent value="specifications" className="mt-4">
-          {product.specifications?.length > 0 ? (
-            <table className="w-full max-w-lg">
-              <tbody>
-                {product.specifications.map((spec: any, i: number) => (
-                  <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : ''}>
-                    <td className="px-4 py-2 font-medium text-sm">{spec.key}</td>
-                    <td className="px-4 py-2 text-sm text-gray-600">{spec.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {product.mainSpecifications ? (
+            <div className="product-description" dangerouslySetInnerHTML={{ __html: product.mainSpecifications }} />
           ) : (
             <p className="text-gray-500">No specifications available</p>
           )}

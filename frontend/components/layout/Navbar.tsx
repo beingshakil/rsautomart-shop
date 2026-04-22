@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export default function Navbar() {
+export default function Navbar({ initialCategories, logo }: { initialCategories?: any[], logo?: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,9 +35,11 @@ export default function Navbar() {
 
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>(initialCategories || []);
   
   useEffect(() => {
+    if (initialCategories && categories.length > 0) return;
+
     api.get('/categories')
       .then(({ data }) => setCategories(data.categories))
       .catch(() => {});
@@ -53,29 +55,10 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="bg-brand-black text-white py-1.5 text-[11px] sm:text-xs tracking-wide font-medium overflow-hidden">
-        {/* Desktop / tablet: static centered */}
-        <div className="hidden sm:block text-center">
-          🚚 FREE SHIPPING on orders over ৳999 &nbsp;|&nbsp; Cash on Delivery Available
-        </div>
-        {/* Mobile: marquee */}
-        <div className="sm:hidden whitespace-nowrap">
-          <div className="inline-block animate-marquee">
-            <span className="mx-6">🚚 FREE SHIPPING on orders over ৳999</span>
-            <span className="mx-6">💵 Cash on Delivery</span>
-            <span className="mx-6">📞 +880 1919-242866</span>
-            <span className="mx-6">🚚 FREE SHIPPING on orders over ৳999</span>
-            <span className="mx-6">💵 Cash on Delivery</span>
-            <span className="mx-6">📞 +880 1919-242866</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navbar & Category Bar Wrapper */}
       <header className="sticky top-0 z-50 flex flex-col shadow-sm">
         <div className="bg-white border-b border-gray-200 w-full relative z-50">
           <div className="max-w-360 mx-auto px-3 md:px-4 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4 flex-wrap lg:flex-nowrap">
+          {/* Mobile Menu Button - Moved next to interactive actions */}
           {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2 order-first"
@@ -84,16 +67,14 @@ export default function Navbar() {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <Image src="/logo-small.png" alt="RS Automart" width={180} height={50} className="h-9 md:h-10 w-auto" priority />
-          </Link>
+          {/* Render the server-provided logo */}
+          {logo}
 
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="order-3 lg:order-2 w-full lg:flex-1 lg:max-w-xl">
             <div className="flex border-2 border-brand-red rounded-md overflow-hidden">
               <input
-                type="text"
+                type="search"
                 placeholder="Search for parts, accessories, brands..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -175,7 +156,7 @@ export default function Navbar() {
         </div>
         </div>
 
-        <CategoryBar />
+        <CategoryBar initialCategories={categories} />
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
